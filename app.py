@@ -1,20 +1,19 @@
-import hashlib
+import argparse
+import getpass
 import hmac
 import html
 import os
 import re
-import secrets
 import sqlite3
-import time
 from contextlib import closing
 from urllib.parse import parse_qs
 from wsgiref.simple_server import make_server
 
+import accounts
+
 BRAND = "Mission Iglesia Universal de Jesucristo El Buen Samaritano"
 FIELDS = {"name": "Nombre de la sede", "country": "País", "city": "Ciudad", "schedule": "Horario de culto"}
 DB_PATH = os.environ.get("MISSION_DB", "mission.sqlite3")
-PASSWORD = os.environ.get("MISSION_ADMIN_PASSWORD", "")
-SIGNING_KEY = os.environ.get("MISSION_SESSION_KEY", "")
 LOCAL = os.environ.get("MISSION_LOCAL") == "1"
 
 
@@ -24,6 +23,7 @@ def escape(value):
 
 def connect():
     db = sqlite3.connect(DB_PATH)
+    db.execute("PRAGMA foreign_keys=ON")
     db.row_factory = sqlite3.Row
     return db
 
@@ -36,18 +36,7 @@ def initialize():
             CHECK (published IN (0,1))
         )""")
 
-
-def session(token=""):
-    if not SIGNING_KEY or not re.fullmatch(r"[0-9]{10}\.[0-9a-f]{64}\.[0-9a-f]{64}", token):
-        return False
-    stamp, nonce, signature = token.split(".")
-    expected = hmac.new(SIGNING_KEY.encode(), f"{stamp}.{nonce}".encode(), hashlib.sha256).hexdigest()
-    return 0 <= time.time() - int(stamp) < 7200 and hmac.compare_digest(signature, expected)
-
-
-def new_session():
-    payload = f"{int(time.time())}.{secrets.token_hex(32)}"
-    return payload + "." + hmac.new(SIGNING_KEY.encode(), payload.encode(), hashlib.sha256).hexdigest()
+        db.executescript(accounts.SCHEMA)
 
 
 def page(title, content):
@@ -91,9 +80,11 @@ def csrf(token):
     return f'<input type="hidden" name="csrf" value="{escape(token)}">'
 
 
-def admin(token, site_id=None, values=None, error=""):
+def admin(token, account, site_id=None, values=None, error=""):
     with closing(connect()) as db:
         rows = db.execute("SELECT * FROM sites ORDER BY country, city, name").fetchall()
+    if account["site_id"] is not None:
+        rows = [row for row in rows if row["id"] == account["site_id"]]
     if values is None:
         selected = next((row for row in rows if row["id"] == site_id), None)
         if site_id and selected is None:
@@ -124,6 +115,7 @@ def login(error=""):
     notice = f'<p class="notice" role="alert">{escape(error)}</p>' if error else ""
     return page("Acceso administrativo", f"""<h1>Acceso administrativo</h1>{notice}
 <form class="editor" method="post" action="/acceso">
+<label>Usuario<input name="username" autocomplete="username" maxlength="64" required></label>
 <label>Contraseña<input name="password" type="password" autocomplete="current-password" required></label>
 <button>Iniciar sesión</button></form>""")
 
@@ -159,27 +151,42 @@ def application(environ, start_response):
         except ValueError:
             return response("400 Bad Request", "Formulario inválido.")
         if path == "/acceso":
-            password = data.get("password", [""])[0]
-            if not PASSWORD or not SIGNING_KEY or not hmac.compare_digest(password.encode(), PASSWORD.encode()):
+            with closing(connect()) as db:
+                new_token = accounts.sign_in(db, data.get("username", [""])[0], data.get("password", [""])[0])
+            if not new_token:
                 return response("403 Forbidden", login("No se pudo iniciar sesión."))
-            return redirect("/admin", ("Set-Cookie", f"mission_session={new_session()}{cookie_flags}"))
-        if not session(token) or not hmac.compare_digest(data.get("csrf", [""])[0].encode(), token.encode()):
+            return redirect("/admin", ("Set-Cookie", f"mission_session={new_token}{cookie_flags}"))
+
+    with closing(connect()) as db:
+        account = accounts.signed_in_account(db, token)
+    if method == "POST":
+        if account is None or not hmac.compare_digest(data.get("csrf", [""])[0].encode(), token.encode()):
             return response("403 Forbidden", "Solicitud no autorizada.")
         if path == "/salir":
+            with closing(connect()) as db, db:
+                db.execute("DELETE FROM sessions WHERE token_hash=?", (accounts.token_hash(token),))
             return redirect("/", ("Set-Cookie", f"mission_session={cookie_flags}; Max-Age=0"))
 
     match = re.fullmatch(r"/admin/sedes/([1-9][0-9]{0,14})", path)
     site_id = int(match.group(1)) if match else None
     if method == "GET" and (path == "/admin" or match):
-        if not session(token):
+        if account is None:
             return redirect("/acceso")
-        body = admin(token, site_id)
+        assigned = account["site_id"]
+        if assigned is not None:
+            if site_id is None:
+                return redirect(f"/admin/sedes/{assigned}")
+            if site_id != assigned:
+                return response("404 Not Found", "Sede no encontrada.")
+        body = admin(token, account, site_id)
         return response("200 OK", body) if body else response("404 Not Found", "Sede no encontrada.")
     if method == "POST" and (path == "/admin/sedes" or match):
+        if account["site_id"] is not None and account["site_id"] != site_id:
+            return response("403 Forbidden", "Solicitud no autorizada.")
         values = {field: data.get(field, [""])[0].strip() for field in FIELDS}
         values["published"] = int("published" in data)
         if any(not values[field] for field in ("name", "country", "city")) or any(len(values[field]) > 120 for field in FIELDS):
-            return response("422 Unprocessable Entity", admin(token, site_id, values, "Revisa los campos obligatorios y el límite de 120 caracteres."))
+            return response("422 Unprocessable Entity", admin(token, account, site_id, values, "Revisa los campos obligatorios y el límite de 120 caracteres."))
         with closing(connect()) as db, db:
             params = [values[field] for field in (*FIELDS, "published")]
             if site_id:
@@ -193,7 +200,27 @@ def application(environ, start_response):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    commands = parser.add_subparsers(dest="command")
+    user = commands.add_parser("crear-cuenta")
+    user.add_argument("usuario")
+    user.add_argument("--sede", type=int)
+    commands.add_parser("inicializar")
+    args = parser.parse_args()
     initialize()
-    with make_server("127.0.0.1", 8000, application) as server:
-        print("http://127.0.0.1:8000", flush=True)
-        server.serve_forever()
+    if args.command == "crear-cuenta":
+        password = getpass.getpass("Contraseña: ")
+        if password != getpass.getpass("Repite la contraseña: "):
+            parser.exit(1, "Las contraseñas deben coincidir.\n")
+        try:
+            with closing(connect()) as db, db:
+                accounts.create_account(db, args.usuario, password, args.sede)
+        except ValueError as error:
+            parser.exit(1, f"{error}\n")
+        except sqlite3.IntegrityError:
+            parser.exit(1, "El usuario ya existe o la sede indicada no está registrada.\n")
+        print("Cuenta creada.")
+    elif not args.command:
+        with make_server("127.0.0.1", 8000, application) as server:
+            print("http://127.0.0.1:8000", flush=True)
+            server.serve_forever()

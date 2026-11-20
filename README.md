@@ -1,22 +1,27 @@
 # Mission Iglesia Universal de Jesucristo El Buen Samaritano
 
-Primera entrega. El directorio público muestra sedes publicadas y permite buscarlas por nombre, ciudad o país. El panel permite registrar, editar, publicar y retirar sedes del directorio.
+El portal público permite buscar sedes por nombre, ciudad o país. El panel gestiona su publicación con cuentas individuales. Una cuenta general puede registrar y editar todas las sedes. Una cuenta asociada a una sede solo puede editar esa sede.
 
-## Ejecutar en local
+## Prueba local
 
-Requiere Python 3.10 o posterior. No necesita instalar paquetes para la prueba local.
+Requiere Python 3.10 o posterior.
 
 ```bash
-export MISSION_LOCAL=1
-read -rsp 'Contraseña administrativa: ' MISSION_ADMIN_PASSWORD
-echo
-export MISSION_ADMIN_PASSWORD
-export MISSION_SESSION_KEY="$(python -c 'import secrets; print(secrets.token_hex(32))')"
-python app.py
+python app.py crear-cuenta direccion
+MISSION_LOCAL=1 python app.py
 ```
 
-Abre http://127.0.0.1:8000 y selecciona **Panel de sedes**. El archivo SQLite se crea automáticamente. Usa solo datos de prueba en esta versión.
+Abre http://127.0.0.1:8000. Registra una sede para obtener su ID desde el enlace **Editar sede**. Crea una cuenta local con el ID correspondiente, por ejemplo `python app.py crear-cuenta administrador-local --sede 1`. El sistema solicitará la contraseña de manera interactiva.
 
-## Despliegue pendiente
+## Contenedor
 
-El servidor incluido sirve para desarrollo local. Antes de habilitar accesos reales, configurar un servidor WSGI de producción detrás de HTTPS, un volumen persistente para `MISSION_DB`, secretos del entorno, control de intentos de inicio de sesión y cuentas individuales con permisos por sede. En producción, omitir `MISSION_LOCAL`. El panel actual admite una única contraseña administrativa.
+```bash
+docker build -t mission-ujebs .
+docker volume create mission-data
+docker run --rm -it -v mission-data:/data mission-ujebs python app.py crear-cuenta direccion
+docker run --rm -p 127.0.0.1:8000:8000 -e MISSION_LOCAL=1 -v mission-data:/data mission-ujebs
+```
+
+Para alojarlo en la nube, configura HTTPS, un volumen persistente con permisos de escritura para el usuario 10001 montado en `/data` y una sola réplica de la aplicación mientras se use SQLite. Crea la cuenta inicial con el comando interactivo en el volumen del servicio. Mantén desactivado `MISSION_LOCAL` en producción. El arranque crea las tablas de cuentas y sesiones sin sustituir los registros de sedes existentes.
+
+El repositorio contiene la primera fase del proyecto. Afiliación de miembros, agenda, formación, finanzas, acompañamiento y videoconferencias pertenecen a entregas posteriores. El proceso de alojamiento y las pruebas de producción se realizan por separado.
