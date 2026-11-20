@@ -1,4 +1,5 @@
 """Vercel entrypoint. SQLite remains available through the local server."""
+import logging
 from threading import Lock
 
 from app import application as mission_application, initialize
@@ -16,8 +17,11 @@ def application(environ, start_response):
                 if not _schema_ready:
                     initialize()
                     _schema_ready = True
-        except DatabaseError:
-            pass
+        except DatabaseError as error:
+            logging.getLogger(__name__).error(
+                "Database startup failed: %s (SQLSTATE %s)",
+                type(error).__name__, getattr(error, "sqlstate", None) or "unavailable",
+            )
         else:
             return mission_application(environ, start_response)
     start_response("503 Service Unavailable", [

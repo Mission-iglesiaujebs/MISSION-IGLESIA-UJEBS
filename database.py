@@ -1,9 +1,16 @@
 """Storage connection for local SQLite and managed PostgreSQL."""
 import os
 import sqlite3
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 SUPABASE_URL = os.environ.get("POSTGRES_URL", "")
-DATABASE_URL = os.environ.get("DATABASE_URL") or SUPABASE_URL
+def postgres_dsn(url):
+    parts = urlsplit(url)
+    query = [(key, value) for key, value in parse_qsl(parts.query, keep_blank_values=True) if key != "supa"]
+    return urlunsplit(parts._replace(query=urlencode(query)))
+
+
+DATABASE_URL = os.environ.get("DATABASE_URL") or postgres_dsn(SUPABASE_URL)
 
 if DATABASE_URL:
     import psycopg
