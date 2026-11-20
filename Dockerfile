@@ -1,9 +1,10 @@
 FROM python:3.13-slim
 WORKDIR /app
-RUN pip install --no-cache-dir gunicorn==23.0.0 && \
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt && \
     useradd --uid 10001 --create-home mission && \
     install -d -o mission -g mission /data
-COPY app.py accounts.py ./
+COPY app.py accounts.py database.py migrate_sqlite.py ./
 ENV MISSION_DB=/data/mission.sqlite3 PYTHONUNBUFFERED=1
 USER mission
 VOLUME /data

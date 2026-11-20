@@ -4,12 +4,12 @@ import hmac
 import html
 import os
 import re
-import sqlite3
 from contextlib import closing
 from urllib.parse import parse_qs
 from wsgiref.simple_server import make_server
 
 import accounts
+import database
 
 BRAND = "Mission Iglesia Universal de Jesucristo El Buen Samaritano"
 FIELDS = {"name": "Nombre de la sede", "country": "País", "city": "Ciudad", "schedule": "Horario de culto"}
@@ -22,21 +22,19 @@ def escape(value):
 
 
 def connect():
-    db = sqlite3.connect(DB_PATH)
-    db.execute("PRAGMA foreign_keys=ON")
-    db.row_factory = sqlite3.Row
-    return db
+    return database.open_connection(DB_PATH)
 
 
 def initialize():
+    schema = """CREATE TABLE IF NOT EXISTS sites (
+        id INTEGER PRIMARY KEY, name TEXT NOT NULL, country TEXT NOT NULL,
+        city TEXT NOT NULL, schedule TEXT NOT NULL, published INTEGER NOT NULL
+        CHECK (published IN (0,1))
+    );"""
     with closing(connect()) as db, db:
-        db.execute("""CREATE TABLE IF NOT EXISTS sites (
-            id INTEGER PRIMARY KEY, name TEXT NOT NULL, country TEXT NOT NULL,
-            city TEXT NOT NULL, schedule TEXT NOT NULL, published INTEGER NOT NULL
-            CHECK (published IN (0,1))
-        )""")
-
-        db.executescript(accounts.SCHEMA)
+        if database.DATABASE_URL:
+            db.execute("SELECT pg_advisory_xact_lock(147900221)")
+        database.initialize_schema(db, schema + accounts.SCHEMA)
 
 
 def page(title, content):
@@ -136,7 +134,7 @@ def application(environ, start_response):
         try:
             with closing(connect()) as db:
                 db.execute("SELECT id FROM sites LIMIT 1").fetchone()
-        except sqlite3.Error:
+        except database.DatabaseError:
             return response("503 Service Unavailable", "Base de datos no disponible.")
         return response("200 OK", "OK")
     if method == "GET" and path == "/":
@@ -224,7 +222,7 @@ if __name__ == "__main__":
                 accounts.create_account(db, args.usuario, password, args.sede)
         except ValueError as error:
             parser.exit(1, f"{error}\n")
-        except sqlite3.IntegrityError:
+        except database.IntegrityError:
             parser.exit(1, "El usuario ya existe o la sede indicada no está registrada.\n")
         print("Cuenta creada.")
     elif not args.command:
