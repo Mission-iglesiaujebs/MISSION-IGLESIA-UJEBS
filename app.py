@@ -132,6 +132,13 @@ def application(environ, start_response):
 
     path = environ.get("PATH_INFO", "/")
     method = environ["REQUEST_METHOD"]
+    if method == "GET" and path == "/healthz":
+        try:
+            with closing(connect()) as db:
+                db.execute("SELECT id FROM sites LIMIT 1").fetchone()
+        except sqlite3.Error:
+            return response("503 Service Unavailable", "Base de datos no disponible.")
+        return response("200 OK", "OK")
     if method == "GET" and path == "/":
         query = parse_qs(environ.get("QUERY_STRING", "")).get("q", [""])[0][:100].strip()
         return response("200 OK", directory(query))
