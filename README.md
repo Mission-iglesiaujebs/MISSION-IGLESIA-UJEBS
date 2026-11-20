@@ -31,3 +31,9 @@ El repositorio contiene la primera fase del proyecto. Afiliación de miembros, a
 Configura `DATABASE_URL` como secreto del entorno. Para AWS RDS, apunta a una base privada, usa un usuario de base de datos dedicado y activa la validación TLS con `sslmode=verify-full` y el certificado raíz correspondiente. El arranque aplica el esquema. Sin `DATABASE_URL`, sigue disponible SQLite.
 
 Si ya hay sedes o cuentas, detén las escrituras y guarda una copia consistente de SQLite. Con PostgreSQL vacío, ejecuta `python migrate_sqlite.py /ruta/copia.sqlite3`. Conserva los identificadores y permisos. Las sesiones anteriores se cierran y los usuarios deben iniciar sesión de nuevo. Comprueba el acceso y los conteos antes de dirigir tráfico a PostgreSQL.
+
+## Alojamiento en Vercel y Supabase
+
+Usa la rama `fase-1-portal-sedes` y la raíz del repositorio. El punto de entrada de Vercel se declara en `pyproject.toml`. Configura `DATABASE_URL` como variable sensible del entorno de despliegue. Usa la conexión del pool compartido de Supabase en modo transacción, con TLS validado, y una cuenta de base de datos dedicada. La aplicación desactiva las sentencias preparadas automáticas para esa conexión.
+
+Antes de abrir el despliegue, inicializa las tablas con `python app.py inicializar` y crea la primera cuenta con `python app.py crear-cuenta direccion` usando la misma base de datos. Mantén el esquema de la aplicación fuera de los esquemas que publica la API de Supabase. Verifica `/healthz`, el inicio de sesión y la publicación de una sede. Si falta `DATABASE_URL`, el punto de entrada de Vercel devuelve 503 y evita escribir datos en el sistema de archivos temporal.

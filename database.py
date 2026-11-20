@@ -17,7 +17,7 @@ else:
 
 class PostgresConnection:
     def __init__(self):
-        self.connection = psycopg.connect(DATABASE_URL, row_factory=dict_row)
+        self.connection = psycopg.connect(DATABASE_URL, row_factory=dict_row, prepare_threshold=None, connect_timeout=5)
 
     def execute(self, sql, parameters=()):
         # Internal statements use qmark placeholders, never user-supplied SQL.
