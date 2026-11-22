@@ -13,7 +13,7 @@ type T = {
 };
 
 const es: T = {
-  sys: { title: "200 sistemas", desc: "Todas las áreas de la iglesia en un solo lugar.", search: "Buscar un sistema…", systems: "sistemas", records: "registros", areas: "áreas", noResults: "No se encontraron sistemas.", readOnly: "Solo lectura" },
+  sys: { title: "300 sistemas", desc: "Todas las áreas de la iglesia en un solo lugar.", search: "Buscar un sistema…", systems: "sistemas", records: "registros", areas: "áreas", noResults: "No se encontraron sistemas.", readOnly: "Solo lectura" },
   aula: {
     title: "Aula virtual", desc: "Cursos, lecciones, tareas y exámenes en línea.", my: "Mis cursos", available: "Cursos disponibles", enroll: "Inscribirme", enrolled: "Inscrito", leave: "Salir del curso", progress: "Progreso",
     lessons: "Lecciones", assignments: "Tareas", exam: "Examen", live: "Clase en vivo", joinLive: "Entrar a la clase en vivo", certificate: "Certificado", markDone: "Marcar como completada",
@@ -26,7 +26,7 @@ const es: T = {
 };
 
 const fr: T = {
-  sys: { title: "200 systèmes", desc: "Tous les domaines de l'église au même endroit.", search: "Rechercher un système…", systems: "systèmes", records: "enregistrements", areas: "domaines", noResults: "Aucun système trouvé.", readOnly: "Lecture seule" },
+  sys: { title: "300 systèmes", desc: "Tous les domaines de l'église au même endroit.", search: "Rechercher un système…", systems: "systèmes", records: "enregistrements", areas: "domaines", noResults: "Aucun système trouvé.", readOnly: "Lecture seule" },
   aula: {
     title: "Salle de classe virtuelle", desc: "Cours, leçons, devoirs et examens en ligne.", my: "Mes cours", available: "Cours disponibles", enroll: "M'inscrire", enrolled: "Inscrit", leave: "Quitter le cours", progress: "Progression",
     lessons: "Leçons", assignments: "Devoirs", exam: "Examen", live: "Cours en direct", joinLive: "Rejoindre le cours en direct", certificate: "Certificat", markDone: "Marquer comme terminée",
@@ -39,7 +39,7 @@ const fr: T = {
 };
 
 const ht: T = {
-  sys: { title: "200 sistèm", desc: "Tout domèn legliz la nan yon sèl kote.", search: "Chèche yon sistèm…", systems: "sistèm", records: "anrejistreman", areas: "domèn", noResults: "Pa jwenn okenn sistèm.", readOnly: "Lekti sèlman" },
+  sys: { title: "300 sistèm", desc: "Tout domèn legliz la nan yon sèl kote.", search: "Chèche yon sistèm…", systems: "sistèm", records: "anrejistreman", areas: "domèn", noResults: "Pa jwenn okenn sistèm.", readOnly: "Lekti sèlman" },
   aula: {
     title: "Sal klas vityèl", desc: "Kou, leson, devwa ak egzamen sou entènèt.", my: "Kou mwen yo", available: "Kou ki disponib", enroll: "Enskri m", enrolled: "Enskri", leave: "Kite kou a", progress: "Pwogrè",
     lessons: "Leson", assignments: "Devwa", exam: "Egzamen", live: "Klas an dirèk", joinLive: "Antre nan klas an dirèk la", certificate: "Sètifika", markDone: "Make kòm fini",
@@ -52,7 +52,7 @@ const ht: T = {
 };
 
 const en: T = {
-  sys: { title: "200 systems", desc: "Every area of the church in one place.", search: "Search a system…", systems: "systems", records: "records", areas: "areas", noResults: "No systems found.", readOnly: "Read only" },
+  sys: { title: "300 systems", desc: "Every area of the church in one place.", search: "Search a system…", systems: "systems", records: "records", areas: "areas", noResults: "No systems found.", readOnly: "Read only" },
   aula: {
     title: "Virtual classroom", desc: "Online courses, lessons, homework and exams.", my: "My courses", available: "Available courses", enroll: "Enroll", enrolled: "Enrolled", leave: "Leave course", progress: "Progress",
     lessons: "Lessons", assignments: "Homework", exam: "Exam", live: "Live class", joinLive: "Join the live class", certificate: "Certificate", markDone: "Mark as completed",
@@ -65,7 +65,7 @@ const en: T = {
 };
 
 const pt: T = {
-  sys: { title: "200 sistemas", desc: "Todas as áreas da igreja em um só lugar.", search: "Buscar um sistema…", systems: "sistemas", records: "registros", areas: "áreas", noResults: "Nenhum sistema encontrado.", readOnly: "Somente leitura" },
+  sys: { title: "300 sistemas", desc: "Todas as áreas da igreja em um só lugar.", search: "Buscar um sistema…", systems: "sistemas", records: "registros", areas: "áreas", noResults: "Nenhum sistema encontrado.", readOnly: "Somente leitura" },
   aula: {
     title: "Sala de aula virtual", desc: "Cursos, lições, tarefas e provas online.", my: "Meus cursos", available: "Cursos disponíveis", enroll: "Inscrever-me", enrolled: "Inscrito", leave: "Sair do curso", progress: "Progresso",
     lessons: "Lições", assignments: "Tarefas", exam: "Prova", live: "Aula ao vivo", joinLive: "Entrar na aula ao vivo", certificate: "Certificado", markDone: "Marcar como concluída",

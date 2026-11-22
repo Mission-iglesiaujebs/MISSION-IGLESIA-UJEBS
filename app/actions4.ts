@@ -3,7 +3,8 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getSessionProfile } from "@/lib/supabase/server";
-import { getSystem, canWriteArea, type SysModule } from "@/lib/catalog";
+import type { SysModule } from "@/lib/catalog";
+import { getCatalog } from "@/lib/catalog-db";
 
 // ================= 200 SISTEMAS =================
 function readSysForm(sys: SysModule, fd: FormData) {
@@ -22,9 +23,10 @@ function readSysForm(sys: SysModule, fd: FormData) {
 }
 
 export async function sysCreate(lang: string, key: string, fd: FormData) {
-  const sys = getSystem(key);
   const { supabase, user, profile } = await getSessionProfile();
-  if (!sys || !user || !canWriteArea(sys.area, profile?.role ?? null)) return;
+  const cat = await getCatalog(supabase, profile);
+  const sys = cat.getSystem(key);
+  if (!sys || !user || !cat.canWrite(sys.area)) return;
   const site = String(fd.get("site_id") ?? "");
   const { error } = await supabase.from("records").insert({ module: key, data: readSysForm(sys, fd), site_id: site || null });
   revalidatePath(`/${lang}/panel/sistemas/${key}`);
@@ -32,9 +34,10 @@ export async function sysCreate(lang: string, key: string, fd: FormData) {
 }
 
 export async function sysUpdate(lang: string, key: string, id: string, fd: FormData) {
-  const sys = getSystem(key);
   const { supabase, profile } = await getSessionProfile();
-  if (!sys || !canWriteArea(sys.area, profile?.role ?? null)) return;
+  const cat = await getCatalog(supabase, profile);
+  const sys = cat.getSystem(key);
+  if (!sys || !cat.canWrite(sys.area)) return;
   const site = String(fd.get("site_id") ?? "");
   const patch: Record<string, unknown> = { data: readSysForm(sys, fd) };
   if (!profile?.site_id && fd.has("site_id")) patch.site_id = site || null;
@@ -44,9 +47,10 @@ export async function sysUpdate(lang: string, key: string, id: string, fd: FormD
 }
 
 export async function sysDelete(lang: string, key: string, id: string) {
-  const sys = getSystem(key);
   const { supabase, profile } = await getSessionProfile();
-  if (!sys || !canWriteArea(sys.area, profile?.role ?? null)) return;
+  const cat = await getCatalog(supabase, profile);
+  const sys = cat.getSystem(key);
+  if (!sys || !cat.canWrite(sys.area)) return;
   await supabase.from("records").delete().eq("id", id).eq("module", key);
   revalidatePath(`/${lang}/panel/sistemas/${key}`);
 }
@@ -57,9 +61,9 @@ const aula = (lang: string, courseId: string, rest = "") => `/${lang}/panel/aula
 export async function enroll(lang: string, courseId: string) {
   const { supabase, user } = await getSessionProfile();
   if (!user) return;
-  await supabase.from("course_students").insert({ course_id: courseId, user_id: user.id });
+  const { error } = await supabase.from("course_students").insert({ course_id: courseId, user_id: user.id });
   revalidatePath(`/${lang}/panel/aula`);
-  redirect(aula(lang, courseId));
+  redirect(error ? `/${lang}/panel/aula?${error.message.includes("course_full") ? "full" : "error"}=1` : aula(lang, courseId));
 }
 
 export async function leaveCourse(lang: string, courseId: string) {

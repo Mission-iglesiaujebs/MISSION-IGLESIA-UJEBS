@@ -18,6 +18,7 @@ function merge(lang: Locale): Dict {
       ...d.modules,
       ...x.modules,
       courses: { ...d.modules.courses, fields: { ...d.modules.courses.fields, ...x.courseFields } },
+      sites: { ...d.modules.sites, fields: { ...d.modules.sites.fields, ...x.siteFields } },
     },
   } as Dict;
 }

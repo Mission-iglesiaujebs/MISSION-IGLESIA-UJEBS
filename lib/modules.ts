@@ -114,6 +114,7 @@ export const modules: ModuleDef[] = [
       { key: "schedule", type: "text", list: true },
       { key: "starts_on", type: "date", list: true },
       { key: "is_open", type: "bool", list: true },
+      { key: "capacity", type: "number", list: true },
       { key: "level", type: "text" },
       { key: "live_url", type: "url" },
       { key: "description", type: "textarea" },
@@ -283,10 +284,19 @@ export const modules: ModuleDef[] = [
   },
   // ---------- Administración ----------
   {
+    key: "regions", table: "regions", icon: "🌎", group: "administration", search: "name",
+    order: { column: "name", ascending: true }, write: ["pastor", "admin"],
+    fields: [
+      { key: "name", type: "text", required: true, list: true },
+      { key: "description", type: "textarea", list: true },
+    ],
+  },
+  {
     key: "sites", table: "sites", icon: "⛪", group: "administration", search: "name",
     order: { column: "country", ascending: true }, write: staff,
     fields: [
       { key: "name", type: "text", required: true, list: true },
+      { key: "region_id", type: "ref", ref: { table: "regions", label: "name" }, list: true },
       { key: "country", type: "text", required: true, list: true },
       { key: "city", type: "text", required: true, list: true },
       { key: "address", type: "text" },

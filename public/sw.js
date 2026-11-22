@@ -1,5 +1,5 @@
 // Service worker de Mission UJEBS: permite instalar la app y muestra una página sin conexión.
-const CACHE = "ujebs-v1";
+const CACHE = "ujebs-v5";
 const OFFLINE = "/offline.html";
 const PRECACHE = [OFFLINE, "/icons/icon-192.png", "/icons/icon-512.png"];
 
@@ -35,4 +35,9 @@ self.addEventListener("fetch", (event) => {
       }))
     );
   }
+});
+
+// "Actualizar la plataforma": activa de inmediato la versión nueva
+self.addEventListener("message", (event) => {
+  if (event.data === "SKIP_WAITING") self.skipWaiting();
 });

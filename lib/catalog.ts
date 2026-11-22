@@ -3,7 +3,7 @@
 import type { Role } from "@/config/site";
 
 export type Lang = "es" | "fr" | "ht" | "en" | "pt";
-type L5 = [string, string, string, string, string];
+export type L5 = [string, string, string, string, string];
 const LANGS: Lang[] = ["es", "fr", "ht", "en", "pt"];
 const pick = (l: L5, lang: string) => l[Math.max(0, LANGS.indexOf(lang as Lang))];
 
@@ -75,7 +75,7 @@ const LEAD: Role[] = ["lider", "secretaria", "pastor", "admin"];
 const STAFF: Role[] = ["secretaria", "pastor", "admin"];
 const FIN: Role[] = ["tesorero", "pastor", "admin"];
 
-type Area = { key: string; icon: string; label: L5; read: Role[]; write: Role[] };
+export type Area = { key: string; icon: string; label: L5; read: Role[]; write: Role[] };
 export const AREAS: Area[] = [
   { key: "admin", icon: "🏛", label: ["Administración", "Administration", "Administrasyon", "Administration", "Administração"], read: STAFF, write: STAFF },
   { key: "secretaria", icon: "🗂", label: ["Secretaría", "Secrétariat", "Sekretarya", "Office", "Secretaria"], read: STAFF, write: STAFF },
@@ -97,9 +97,19 @@ export const AREAS: Area[] = [
   { key: "tecnologia", icon: "💻", label: ["Tecnología", "Technologie", "Teknoloji", "Technology", "Tecnologia"], read: STAFF, write: STAFF },
   { key: "voluntarios", icon: "🙋", label: ["Voluntariado y personal", "Bénévolat et personnel", "Volontè ak anplwaye", "Volunteers & staff", "Voluntariado e pessoal"], read: LEAD, write: LEAD },
   { key: "legal", icon: "⚖️", label: ["Legal y documentos", "Juridique et documents", "Legal ak dokiman", "Legal & documents", "Jurídico e documentos"], read: STAFF, write: ["pastor", "admin"] },
+  { key: "intercesion", icon: "🛐", label: ["Intercesión y oración", "Intercession et prière", "Entèsesyon ak lapriyè", "Intercession & prayer", "Intercessão e oração"], read: ALL, write: LEAD },
+  { key: "ujieres", icon: "🤵", label: ["Ujieres y protocolo", "Accueil et protocole", "Asistan ak pwotokòl", "Ushers & protocol", "Recepção e protocolo"], read: LEAD, write: LEAD },
+  { key: "diaconia", icon: "🫱", label: ["Diaconía y ancianos", "Diaconat et anciens", "Dyakonat ak ansyen", "Deacons & elders", "Diaconia e anciãos"], read: ["lider", "secretaria", "tesorero", "pastor", "admin"], write: STAFF },
+  { key: "escuela", icon: "📚", label: ["Escuela dominical", "École du dimanche", "Lekòl dimanch", "Sunday school", "Escola dominical"], read: ALL, write: LEAD },
+  { key: "adolescentes", icon: "🎧", label: ["Adolescentes", "Adolescents", "Adolesan", "Teens", "Adolescentes"], read: LEAD, write: LEAD },
+  { key: "celulas", icon: "🏘", label: ["Células y grupos", "Cellules et groupes", "Selil ak gwoup", "Cells & small groups", "Células e grupos"], read: LEAD, write: LEAD },
+  { key: "evangelismo", icon: "📣", label: ["Evangelismo", "Évangélisation", "Evanjelizasyon", "Evangelism", "Evangelismo"], read: ALL, write: LEAD },
+  { key: "consolidacion", icon: "🌱", label: ["Consolidación", "Consolidation", "Konsolidasyon", "Follow-up & consolidation", "Consolidação"], read: LEAD, write: LEAD },
+  { key: "capellania", icon: "🏥", label: ["Capellanía", "Aumônerie", "Omonri", "Chaplaincy", "Capelania"], read: LEAD, write: LEAD },
+  { key: "instituto", icon: "🎓", label: ["Instituto bíblico", "Institut biblique", "Enstiti biblik", "Bible institute", "Instituto bíblico"], read: ALL, write: LEAD },
 ];
 
-// ---------- Los 200 sistemas ----------
+// ---------- Los 300 sistemas ----------
 const CATALOG = `
 admin.planes|🗂|Plan estratégico|Plan stratégique|Plan estratejik|Strategic plan|Plano estratégico|title,resp,start,end,status,desc
 admin.metas|🎯|Metas anuales|Objectifs annuels|Objektif anyèl|Annual goals|Metas anuais|title,resp,due,status,priority,notes
@@ -301,11 +311,111 @@ legal.directiva|🧑‍⚖️|Directiva legal|Conseil d'administration|Konsèy a
 legal.asambleas|🗳|Asambleas|Assemblées générales|Asanble|General assemblies|Assembleias|title,date,place,people,doc
 legal.cumplimiento|✔️|Cumplimiento|Conformité|Konfòmite|Compliance|Conformidade|title,resp,due,status,notes
 legal.privacidad|🔒|Protección de datos|Protection des données|Pwoteksyon done|Data protection|Proteção de dados|title,resp,date,doc,status
+intercesion.turnos|⏰|Turnos de intercesión|Tours d'intercession|Tou entèsesyon|Intercession shifts|Turnos de intercessão|person,start,end,topic,notes
+intercesion.vigilias|🌙|Vigilias|Veillées|Vèy|Vigils|Vigílias|title,start,end,place,people
+intercesion.peticiones|🙏|Peticiones especiales|Demandes spéciales|Demann espesyal|Special requests|Pedidos especiais|person,topic,date,priority,status
+intercesion.respuestas|✨|Oraciones contestadas|Prières exaucées|Priyè ki jwenn repons|Answered prayers|Orações respondidas|person,date,topic,result
+intercesion.ayunos|🍞|Ayunos congregacionales|Jeûnes de l'assemblée|Jèn legliz|Church fasts|Jejuns da igreja|title,start,end,people,notes
+intercesion.guerreros|🛡|Guerreros de oración|Guerriers de prière|Gèrye lapriyè|Prayer warriors|Guerreiros de oração|person,phone,group,active,notes
+intercesion.motivos|📋|Motivos de oración semanales|Sujets de prière hebdomadaires|Sijè lapriyè chak semèn|Weekly prayer points|Motivos de oração semanais|title,date,passage,desc
+intercesion.cadenas|🔗|Cadenas de oración|Chaînes de prière|Chèn lapriyè|Prayer chains|Correntes de oração|title,resp,start,people,status
+intercesion.altar|🕯|Ministerio de altar|Ministère de l'autel|Ministè lotèl|Altar ministry|Ministério de altar|person,date,resp,result,notes
+intercesion.naciones|🌍|Intercesión por naciones|Intercession pour les nations|Entèsesyon pou nasyon yo|Prayer for nations|Intercessão pelas nações|country,topic,date,resp,notes
+ujieres.equipo|🤵|Equipo de ujieres|Équipe d'accueil|Ekip asistan|Usher team|Equipe de recepção|person,role,phone,active,notes
+ujieres.turnos|🕐|Turnos de ujieres|Tours des huissiers|Tou asistan|Usher schedule|Escala de recepção|person,date,place,role,notes
+ujieres.bienvenida|👋|Bienvenida a visitas|Accueil des visiteurs|Akèy vizitè|Visitor welcome|Boas-vindas a visitantes|person,date,phone,resp,notes
+ujieres.asientos|💺|Control de asientos|Gestion des places|Kontwòl chèz|Seating control|Controle de assentos|date,place,qty,people,notes
+ujieres.protocolo|🎖|Protocolo|Protocole|Pwotokòl|Protocol|Protocolo|title,date,resp,desc
+ujieres.ofrenda|🧺|Recolección de ofrendas|Collecte des offrandes|Ranmase ofrann|Offering collection|Recolhimento de ofertas|date,resp,amount,currency,notes
+ujieres.objetos|🔎|Objetos perdidos|Objets trouvés|Bagay pèdi|Lost & found|Achados e perdidos|title,date,place,status,notes
+ujieres.santacena|🍷|Servicio de Santa Cena|Service de la Sainte Cène|Sèvis Sentsèn|Communion service|Serviço da Santa Ceia|date,resp,people,qty,notes
+ujieres.capacitacion|📘|Capacitación de ujieres|Formation des huissiers|Fòmasyon asistan|Usher training|Treinamento de recepção|title,date,resp,people,notes
+ujieres.incidencias|⚠️|Incidencias en culto|Incidents au culte|Ensidan nan kilt|Service incidents|Ocorrências no culto|title,date,place,priority,desc
+diaconia.diaconos|🫱|Diáconos|Diacres|Dyak|Deacons|Diáconos|person,role,phone,start,active
+diaconia.ancianos|👴|Consejo de ancianos|Conseil des anciens|Konsèy ansyen|Elders council|Conselho de anciãos|person,role,start,phone,active
+diaconia.ayudas|🤲|Ayudas a hermanos|Aide aux frères|Èd pou frè yo|Member assistance|Ajuda a irmãos|person,date,amount,currency,status
+diaconia.visitas|🏡|Visitas diaconales|Visites diaconales|Vizit dyak|Deacon visits|Visitas diaconais|person,date,address,resp,notes
+diaconia.reuniones|🤝|Reuniones del consejo|Réunions du conseil|Reyinyon konsèy|Council meetings|Reuniões do conselho|title,start,place,people,result
+diaconia.acuerdos|📜|Acuerdos del consejo|Décisions du conseil|Desizyon konsèy|Council resolutions|Decisões do conselho|title,date,resp,approved,doc
+diaconia.disciplina|⚖️|Restauración y disciplina|Restauration et discipline|Restorasyon ak disiplin|Restoration & discipline|Restauração e disciplina|person,resp,start,status,notes
+diaconia.ordenaciones|🙌|Ordenaciones|Ordinations|Ordinasyon|Ordinations|Ordenações|person,role,date,resp,doc
+diaconia.necesidades|📦|Necesidades de la congregación|Besoins de l'assemblée|Bezwen legliz la|Congregation needs|Necessidades da congregação|title,person,priority,status,notes
+diaconia.cena|🍞|Preparación de la Santa Cena|Préparation de la Sainte Cène|Preparasyon Sentsèn|Communion preparation|Preparação da Santa Ceia|date,resp,qty,cost,notes
+escuela.clases|📚|Clases dominicales|Classes du dimanche|Klas dimanch|Sunday classes|Aulas dominicais|title,group,resp,date,people
+escuela.maestros|👩‍🏫|Maestros|Moniteurs|Pwofesè|Teachers|Professores|person,group,phone,active,notes
+escuela.alumnos|🧑‍🎓|Alumnos|Élèves|Elèv|Students|Alunos|name,age,group,phone,notes
+escuela.lecciones|📖|Plan de lecciones|Plan des leçons|Plan leson|Lesson plan|Plano de lições|title,date,passage,group,desc
+escuela.asistencia|📋|Asistencia dominical|Présence du dimanche|Prezans dimanch|Sunday attendance|Frequência dominical|date,group,people,resp,notes
+escuela.trimestres|🗓|Trimestres|Trimestres|Trimès|Quarters|Trimestres|title,start,end,topic,notes
+escuela.materiales|📦|Materiales y libros|Matériel et livres|Materyèl ak liv|Materials & books|Materiais e livros|name,qty,cost,supplier,notes
+escuela.concursos|🏆|Concursos bíblicos|Concours bibliques|Konkou biblik|Bible quizzes|Concursos bíblicos|title,date,people,result,notes
+escuela.aulas|🚪|Salas y grupos|Salles et groupes|Sal ak gwoup|Rooms & groups|Salas e turmas|name,place,qty,resp,notes
+escuela.evaluaciones|📝|Evaluaciones|Évaluations|Evalyasyon|Assessments|Avaliações|person,group,date,level,result
+adolescentes.registro|🎧|Registro de adolescentes|Registre des adolescents|Rejis adolesan|Teen registry|Cadastro de adolescentes|name,age,guardian,phone,group
+adolescentes.reuniones|🔥|Reuniones de adolescentes|Réunions des ados|Reyinyon adolesan|Teen meetings|Reuniões de adolescentes|title,start,place,people,notes
+adolescentes.mentores|🧭|Mentores|Mentors|Konseye|Mentors|Mentores|person,resp,phone,active,notes
+adolescentes.campamentos|⛺|Campamentos|Camps|Kan|Camps|Acampamentos|title,start,end,place,budget
+adolescentes.permisos|🖊|Permisos de padres|Autorisations parentales|Otorizasyon paran|Parent permissions|Autorizações dos pais|name,guardian,date,approved,doc
+adolescentes.actividades|🎯|Actividades|Activités|Aktivite|Activities|Atividades|title,date,place,resp,cost
+adolescentes.talentos|🎤|Talentos y artes|Talents et arts|Talan ak la|Talents & arts|Talentos e artes|person,category,level,notes
+adolescentes.estudios|📖|Estudios bíblicos juveniles|Études bibliques ados|Etid biblik adolesan|Teen Bible studies|Estudos bíblicos teen|topic,passage,date,resp,place
+adolescentes.consejeria|💬|Consejería|Accompagnement|Konsèy|Counseling|Aconselhamento|person,date,resp,status,notes
+adolescentes.servicio|🙋|Servicio comunitario|Service communautaire|Sèvis kominotè|Community service|Serviço comunitário|title,date,place,people,result
+celulas.grupos|🏘|Grupos de crecimiento|Groupes de croissance|Gwoup kwasans|Growth groups|Grupos de crescimento|name,resp,address,freq,people
+celulas.reportes|📊|Reportes semanales|Rapports hebdomadaires|Rapò chak semèn|Weekly reports|Relatórios semanais|group,date,people,amount,notes
+celulas.lideres|⭐|Líderes de célula|Leaders de cellule|Lidè selil|Cell leaders|Líderes de célula|person,group,phone,level,active
+celulas.anfitriones|🏠|Casas anfitrionas|Maisons d'accueil|Kay ki resevwa|Host homes|Casas anfitriãs|person,address,phone,qty,active
+celulas.multiplicacion|🌱|Multiplicaciones|Multiplications|Miltiplikasyon|Multiplications|Multiplicações|group,date,resp,people,notes
+celulas.temas|📖|Temas de estudio|Thèmes d'étude|Tèm etid|Study topics|Temas de estudo|title,date,passage,desc
+celulas.supervision|🧭|Supervisión de redes|Supervision des réseaux|Sipèvizyon rezo|Network oversight|Supervisão de redes|group,resp,date,result,notes
+celulas.visitas|🚪|Visitas a células|Visites des cellules|Vizit selil|Cell visits|Visitas às células|group,person,date,resp,notes
+celulas.nuevos|🤝|Invitados nuevos|Nouveaux invités|Nouvo envite|New guests|Novos convidados|person,group,phone,date,status
+celulas.metas|🎯|Metas de crecimiento|Objectifs de croissance|Objektif kwasans|Growth goals|Metas de crescimento|group,title,qty,due,status
+evangelismo.salidas|📣|Salidas evangelísticas|Sorties d'évangélisation|Sòti evanjelizasyon|Outreach outings|Saídas evangelísticas|title,date,place,people,result
+evangelismo.equipos|👥|Equipos de evangelismo|Équipes d'évangélisation|Ekip evanjelizasyon|Evangelism teams|Equipes de evangelismo|name,resp,group,people,active
+evangelismo.decisiones|✝️|Decisiones de fe|Décisions de foi|Desizyon lafwa|Faith decisions|Decisões de fé|person,phone,date,place,resp
+evangelismo.campanas|🎪|Campañas evangelísticas|Campagnes d'évangélisation|Kanpay evanjelizasyon|Evangelistic campaigns|Campanhas evangelísticas|title,start,end,place,budget
+evangelismo.zonas|🗺|Zonas y barrios|Zones et quartiers|Zòn ak katye|Zones & neighborhoods|Zonas e bairros|name,address,resp,people,notes
+evangelismo.materiales|📄|Folletos y biblias|Tracts et bibles|Feyè ak bib|Tracts & Bibles|Folhetos e bíblias|name,qty,cost,place,notes
+evangelismo.digital|📱|Evangelismo digital|Évangélisation numérique|Evanjelizasyon dijital|Digital evangelism|Evangelismo digital|title,date,url,people,result
+evangelismo.capacitacion|🎓|Capacitación evangelística|Formation à l'évangélisation|Fòmasyon evanjelizasyon|Evangelism training|Treinamento evangelístico|title,date,resp,people,notes
+evangelismo.testimonios|✨|Testimonios de salvación|Témoignages de salut|Temwayaj sali|Salvation testimonies|Testemunhos de salvação|person,date,title,desc,approved
+evangelismo.metas|🎯|Metas de alcance|Objectifs de portée|Objektif|Outreach goals|Metas de alcance|title,qty,due,resp,status
+consolidacion.nuevos|🌱|Nuevos convertidos|Nouveaux convertis|Nouvo konvèti|New converts|Novos convertidos|person,phone,date,resp,status
+consolidacion.llamadas|📞|Llamadas de consolidación|Appels de suivi|Apèl swivi|Follow-up calls|Ligações de consolidação|person,phone,date,resp,result
+consolidacion.visitas|🏡|Visitas de consolidación|Visites de suivi|Vizit swivi|Follow-up visits|Visitas de consolidação|person,address,date,resp,notes
+consolidacion.fundamentos|📘|Clases de fundamentos|Cours de fondements|Klas fondasyon|Foundations classes|Aulas de fundamentos|title,group,resp,date,people
+consolidacion.encuentros|🔥|Encuentros|Rencontres|Rankont|Encounters|Encontros|title,start,end,place,people
+consolidacion.bautismo|💧|Preparación al bautismo|Préparation au baptême|Preparasyon batèm|Baptism preparation|Preparação para o batismo|person,date,resp,status,notes
+consolidacion.padrinos|🤝|Padrinos espirituales|Parrains spirituels|Parenn espirityèl|Spiritual sponsors|Padrinhos espirituais|person,resp,start,status,notes
+consolidacion.integracion|🧩|Integración a ministerios|Intégration aux ministères|Entegrasyon nan ministè|Ministry integration|Integração aos ministérios|person,group,date,status,notes
+consolidacion.oracion|🙏|Oración por nuevos|Prière pour les nouveaux|Lapriyè pou nouvo yo|Prayer for newcomers|Oração pelos novos|person,date,resp,notes
+consolidacion.indicadores|📊|Indicadores de retención|Indicateurs de rétention|Endikatè retansyon|Retention metrics|Indicadores de retenção|title,date,qty,result,notes
+capellania.hospitales|🏥|Capellanía hospitalaria|Aumônerie hospitalière|Omonri lopital|Hospital chaplaincy|Capelania hospitalar|place,date,resp,people,notes
+capellania.carceles|⛓|Capellanía carcelaria|Aumônerie carcérale|Omonri prizon|Prison chaplaincy|Capelania prisional|place,date,resp,people,notes
+capellania.escolar|🏫|Capellanía escolar|Aumônerie scolaire|Omonri lekòl|School chaplaincy|Capelania escolar|org,place,date,resp,notes
+capellania.empresarial|🏢|Capellanía empresarial|Aumônerie en entreprise|Omonri antrepriz|Workplace chaplaincy|Capelania empresarial|org,person,date,resp,notes
+capellania.capellanes|🕊|Capellanes|Aumôniers|Omonye|Chaplains|Capelães|person,role,phone,org,active
+capellania.atenciones|💬|Atenciones|Accompagnements|Akonpayman|Care sessions|Atendimentos|person,place,date,resp,notes
+capellania.emergencias|🚑|Crisis y emergencias|Crises et urgences|Kriz ak ijans|Crisis response|Crises e emergências|title,date,place,priority,result
+capellania.funerales|🕯|Acompañamiento fúnebre|Accompagnement funéraire|Akonpayman antèman|Funeral support|Acompanhamento fúnebre|person,date,place,resp,notes
+capellania.convenios|📄|Convenios institucionales|Conventions|Akò|Institutional agreements|Convênios|org,start,end,resp,doc
+capellania.informes|📊|Informes de capellanía|Rapports d'aumônerie|Rapò omonri|Chaplaincy reports|Relatórios de capelania|title,date,people,result,doc
+instituto.programas|🎓|Programas académicos|Programmes académiques|Pwogram akademik|Academic programs|Programas acadêmicos|title,level,hours,resp,active
+instituto.materias|📚|Materias|Matières|Matyè|Subjects|Disciplinas|title,level,hours,resp,notes
+instituto.profesores|👨‍🏫|Profesores|Professeurs|Pwofesè|Faculty|Professores|person,role,email,phone,active
+instituto.estudiantes|🧑‍🎓|Estudiantes|Étudiants|Etidyan|Students|Estudantes|name,email,phone,level,status
+instituto.matriculas|📝|Matrículas|Inscriptions|Enskripsyon|Enrollments|Matrículas|person,title,date,amount,status
+instituto.calificaciones|📈|Calificaciones|Notes|Nòt|Grades|Notas|person,title,date,result,notes
+instituto.horarios|🗓|Horarios de clases|Horaires des cours|Orè klas|Class schedule|Horários de aulas|title,start,end,place,resp
+instituto.graduaciones|🎉|Graduaciones|Remises de diplômes|Gradyasyon|Graduations|Formaturas|title,date,people,place,notes
+instituto.biblioteca|📕|Biblioteca teológica|Bibliothèque théologique|Bibliyotèk teyolojik|Theology library|Biblioteca teológica|title,person,category,qty,code
+instituto.becas|💳|Becas|Bourses|Bous|Scholarships|Bolsas|person,amount,currency,status,notes
 `;
 
 // ---------- Tipos y utilidades ----------
-export type SysField = { key: string; type: SysFieldType; options?: string[] };
-export type SysModule = { key: string; area: string; icon: string; labels: L5; fields: SysField[] };
+export type SysField = { key: string; type: SysFieldType; options?: string[]; label?: string };
+export type SysModule = { key: string; area: string; icon: string; labels: L5; fields: SysField[]; custom?: boolean; hidden?: boolean; siteId?: string | null };
 
 export const SYSTEMS: SysModule[] = CATALOG.trim().split("\n").map((line) => {
   const [key, icon, es, fr, ht, en, pt, fields] = line.split("|");
@@ -318,8 +428,13 @@ export const SYSTEMS: SysModule[] = CATALOG.trim().split("\n").map((line) => {
 export const getSystem = (key: string) => SYSTEMS.find((s) => s.key === key);
 export const getArea = (key: string) => AREAS.find((a) => a.key === key);
 export const sysTitle = (s: SysModule, lang: string) => pick(s.labels, lang);
-export const areaTitle = (a: Area, lang: string) => pick(a.label, lang);
+export const areaTitle = (a: { label: L5 }, lang: string) => pick(a.label, lang);
 export const fieldLabel = (key: string, lang: string) => (V[key] ? pick(V[key].label, lang) : key);
 export const optionLabel = (key: string, lang: string) => (OPTIONS[key] ? pick(OPTIONS[key], lang) : key);
 export const canReadArea = (area: string, role: Role | null) => !!role && !!getArea(area)?.read.includes(role);
 export const canWriteArea = (area: string, role: Role | null) => !!role && !!getArea(area)?.write.includes(role);
+
+// Nombre visible de un campo (los campos propios traen su nombre)
+export const fLabel = (f: SysField, lang: string) => f.label || fieldLabel(f.key, lang);
+export const VOCAB = Object.entries(V).map(([key, v]) => ({ key, type: v.type, options: v.options }));
+export const LANGS5 = LANGS;

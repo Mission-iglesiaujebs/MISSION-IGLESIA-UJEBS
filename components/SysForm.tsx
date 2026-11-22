@@ -1,5 +1,5 @@
 import type { SysModule } from "@/lib/catalog";
-import { fieldLabel, optionLabel } from "@/lib/catalog";
+import { fLabel, optionLabel } from "@/lib/catalog";
 
 const inputType: Record<string, string> = { number: "number", date: "date", datetime: "datetime-local", url: "url", email: "email" };
 
@@ -34,7 +34,7 @@ export function SysForm({
       )}
       {sys.fields.map((f) => {
         const v = toInput(f.type, values[f.key]);
-        const label = fieldLabel(f.key, lang);
+        const label = fLabel(f, lang);
         return (
           <div key={f.key} className={f.type === "textarea" ? "sm:col-span-2" : ""}>
             {f.type === "bool" ? (

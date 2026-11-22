@@ -3,7 +3,9 @@ import { notFound, redirect } from "next/navigation";
 import { getDict } from "@/lib/i18n";
 import { getUi4 } from "@/lib/ui4-i18n";
 import { getSessionProfile } from "@/lib/supabase/server";
-import { getSystem, getArea, sysTitle, areaTitle, fieldLabel, optionLabel, canReadArea, canWriteArea, type SysField } from "@/lib/catalog";
+import { sysTitle, areaTitle, fLabel, optionLabel, type SysField } from "@/lib/catalog";
+import { getCatalog } from "@/lib/catalog-db";
+import { getUi5 } from "@/lib/ui5-i18n";
 import { SysForm } from "@/components/SysForm";
 import { sysCreate, sysDelete } from "@/app/actions4";
 
@@ -12,18 +14,19 @@ export const dynamic = "force-dynamic";
 type Rec = { id: string; site_id: string | null; data: Record<string, unknown>; created_at: string };
 
 export default async function SystemPage({ params, searchParams }: { params: { lang: string; key: string }; searchParams: { ok?: string; error?: string; q?: string; nuevo?: string } }) {
-  const sys = getSystem(params.key);
-  if (!sys) notFound();
   const lang = params.lang;
   const t = getDict(lang);
   const u = getUi4(lang);
   const { supabase, user, profile } = await getSessionProfile();
   if (!user) redirect(`/${lang}/login`);
-  const role = profile?.role ?? null;
-  if (!canReadArea(sys.area, role)) return <p className="card">{t.common.noAccess}</p>;
-  const writer = canWriteArea(sys.area, role);
+  const cat = await getCatalog(supabase, profile);
+  const sys = cat.getSystem(params.key);
+  if (!sys) notFound();
+  if (!cat.canRead(sys.area)) return <p className="card">{t.common.noAccess}</p>;
+  const writer = cat.canWrite(sys.area);
+  const u5 = getUi5(lang);
   const general = !profile?.site_id;
-  const area = getArea(sys.area)!;
+  const area = cat.getArea(sys.area)!;
 
   const q = (searchParams.q ?? "").trim().slice(0, 100).replace(/[%_,()]/g, "");
   const searchField = sys.fields.find((f) => f.type === "text")?.key;
@@ -57,7 +60,11 @@ export default async function SystemPage({ params, searchParams }: { params: { l
           <h1 className="mt-1 text-2xl font-bold">{sys.icon} {sysTitle(sys, lang)}</h1>
           <p className="text-sm text-slate-500">{rows.length} {u.sys.records}{!writer && ` · ${u.sys.readOnly}`}</p>
         </div>
-        <a href={`/${lang}/panel/sistemas/${sys.key}/export`} className="btn-ghost ring-1 ring-slate-200">⬇ {t.common.export}</a>
+        <div className="flex flex-wrap gap-2">
+          {profile?.role === "admin" && <Link href={`/${lang}/panel/sistemas/gestionar/modulo?key=${sys.key}`} className="btn-ghost ring-1 ring-slate-200">✏️ {u5.mods.edit}</Link>}
+          {profile?.role === "admin" && <Link href={`/${lang}/panel/sistemas/gestionar/modulo?from=${sys.key}`} className="btn-ghost ring-1 ring-slate-200">📑 {u5.mods.duplicate}</Link>}
+          <a href={`/${lang}/panel/sistemas/${sys.key}/export`} className="btn-ghost ring-1 ring-slate-200">⬇ {t.common.export}</a>
+        </div>
       </div>
 
       {searchParams.ok && <p className="rounded-lg bg-green-50 p-3 text-sm text-green-700">✓ {t.common.saved}</p>}
@@ -65,7 +72,7 @@ export default async function SystemPage({ params, searchParams }: { params: { l
 
       {searchField && (
         <form className="flex flex-wrap gap-2 text-sm">
-          <input name="q" defaultValue={q} placeholder={`${t.common.searchPh} (${fieldLabel(searchField, lang)})`} maxLength={100} className="input w-72" />
+          <input name="q" defaultValue={q} placeholder={`${t.common.searchPh} (${fLabel(sys.fields.find((f) => f.key === searchField)!, lang)})`} maxLength={100} className="input w-72" />
           <button className="btn">{t.common.search}</button>
         </form>
       )}
@@ -85,7 +92,7 @@ export default async function SystemPage({ params, searchParams }: { params: { l
             <thead className="bg-slate-50 text-xs uppercase text-slate-500">
               <tr>
                 {general && <th className="px-4 py-3">{t.users.site}</th>}
-                {cols.map((f) => <th key={f.key} className="px-4 py-3">{fieldLabel(f.key, lang)}</th>)}
+                {cols.map((f) => <th key={f.key} className="px-4 py-3">{fLabel(f, lang)}</th>)}
                 {writer && <th className="px-4 py-3">{t.common.actions}</th>}
               </tr>
             </thead>

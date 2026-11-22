@@ -4,7 +4,7 @@ import { getDict } from "@/lib/i18n";
 import { getSessionProfile } from "@/lib/supabase/server";
 import { modules, canSee, canCreate } from "@/lib/modules";
 import { getUi4 } from "@/lib/ui4-i18n";
-import { SYSTEMS, canReadArea } from "@/lib/catalog";
+import { getCatalog } from "@/lib/catalog-db";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +19,7 @@ export default async function Dashboard({ params }: { params: { lang: string } }
   if (!user) redirect(`/${lang}/login`);
   const role = profile?.role ?? null;
   const u4 = getUi4(lang);
+  const cat = await getCatalog(supabase, profile);
   const isFinance = role === "tesorero" || role === "pastor" || role === "admin";
 
   const now = new Date();
@@ -75,7 +76,7 @@ export default async function Dashboard({ params }: { params: { lang: string } }
         </Link>
         <Link href={`/${lang}/panel/sistemas`} className="flex items-center gap-4 rounded-2xl bg-gradient-to-br from-amber-500 to-brand-gold p-6 text-brand shadow-md transition hover:-translate-y-0.5">
           <span className="text-5xl">🧩</span>
-          <div><p className="text-xl font-bold">{SYSTEMS.filter((s) => canReadArea(s.area, role)).length} · {u4.sys.title}</p><p className="text-sm">{u4.sys.desc}</p></div>
+          <div><p className="text-xl font-bold">{cat.systems.filter((s) => cat.canRead(s.area)).length} · {u4.sys.title}</p><p className="text-sm">{u4.sys.desc}</p></div>
         </Link>
       </div>
 
