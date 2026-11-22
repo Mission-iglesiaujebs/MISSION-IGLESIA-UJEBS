@@ -20,6 +20,7 @@ export type ModuleDef = {
   write: Role[];
   read?: Role[]; // roles que ven el módulo en el menú (por defecto: todos)
   anyMemberCanCreate?: boolean;
+  noCreate?: boolean; // solo se edita (p. ej. entregas que hacen los alumnos)
   search: string; // campo de texto para buscar
   fields: Field[];
 };
@@ -113,7 +114,61 @@ export const modules: ModuleDef[] = [
       { key: "schedule", type: "text", list: true },
       { key: "starts_on", type: "date", list: true },
       { key: "is_open", type: "bool", list: true },
+      { key: "level", type: "text" },
+      { key: "live_url", type: "url" },
       { key: "description", type: "textarea" },
+    ],
+  },
+  {
+    key: "lessons", table: "lessons", icon: "📚", group: "formation", search: "title",
+    order: { column: "position", ascending: true }, write: leaders, read: leaders,
+    fields: [
+      S,
+      { key: "course_id", type: "ref", ref: { table: "courses", label: "title" }, required: true, list: true },
+      { key: "position", type: "number", list: true },
+      { key: "title", type: "text", required: true, list: true },
+      { key: "video_url", type: "url", list: true },
+      { key: "material_url", type: "url" },
+      { key: "content", type: "textarea" },
+    ],
+  },
+  {
+    key: "assignments", table: "assignments", icon: "🗒", group: "formation", search: "title",
+    order: { column: "created_at", ascending: false }, write: leaders, read: leaders,
+    fields: [
+      S,
+      { key: "course_id", type: "ref", ref: { table: "courses", label: "title" }, required: true, list: true },
+      { key: "title", type: "text", required: true, list: true },
+      { key: "due_at", type: "datetime", list: true },
+      { key: "points", type: "number", list: true },
+      { key: "instructions", type: "textarea" },
+    ],
+  },
+  {
+    key: "quiz_questions", table: "quiz_questions", icon: "❓", group: "formation", search: "question",
+    order: { column: "position", ascending: true }, write: leaders, read: leaders,
+    fields: [
+      S,
+      { key: "course_id", type: "ref", ref: { table: "courses", label: "title" }, required: true, list: true },
+      { key: "position", type: "number", list: true },
+      { key: "question", type: "text", required: true, list: true },
+      { key: "option_a", type: "text", required: true },
+      { key: "option_b", type: "text", required: true },
+      { key: "option_c", type: "text" },
+      { key: "option_d", type: "text" },
+      { key: "correct", type: "select", options: ["a", "b", "c", "d"], required: true, list: true },
+    ],
+  },
+  {
+    key: "submissions", table: "submissions", icon: "✅", group: "formation", search: "student_name",
+    order: { column: "created_at", ascending: false }, write: leaders, read: leaders, noCreate: true,
+    fields: [
+      { key: "assignment_id", type: "ref", ref: { table: "assignments", label: "title" }, required: true, list: true },
+      { key: "student_name", type: "text", list: true },
+      { key: "content", type: "textarea", list: true },
+      { key: "link", type: "url", list: true },
+      { key: "grade", type: "number", list: true },
+      { key: "feedback", type: "textarea" },
     ],
   },
   {
@@ -259,5 +314,5 @@ export const modules: ModuleDef[] = [
 export const getModule = (key: string) => modules.find((m) => m.key === key);
 
 export const canWrite = (m: ModuleDef, role: Role | null) => !!role && m.write.includes(role);
-export const canCreate = (m: ModuleDef, role: Role | null) => !!role && (m.anyMemberCanCreate || canWrite(m, role));
+export const canCreate = (m: ModuleDef, role: Role | null) => !!role && !m.noCreate && (m.anyMemberCanCreate || canWrite(m, role));
 export const canSee = (m: ModuleDef, role: Role | null) => !!role && (!m.read || m.read.includes(role));

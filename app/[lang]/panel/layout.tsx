@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getDict } from "@/lib/i18n";
 import { getSessionProfile } from "@/lib/supabase/server";
 import { modules, groups, canSee } from "@/lib/modules";
+import { getUi4 } from "@/lib/ui4-i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -12,11 +13,14 @@ export default async function PanelLayout({ children, params }: { children: Reac
   const { user, profile } = await getSessionProfile();
   if (!user) redirect(`/${lang}/login`);
   const role = profile?.role ?? null;
+  const u = getUi4(lang);
 
   const nav = (
     <nav className="space-y-5 text-sm">
       <div className="space-y-0.5">
         <Link href={`/${lang}/panel`} className="side-link">📊 {t.nav.dashboard}</Link>
+        <Link href={`/${lang}/panel/aula`} className="side-link font-semibold text-brand">🎓 {u.aula.title}</Link>
+        <Link href={`/${lang}/panel/sistemas`} className="side-link font-semibold text-brand">🧩 {u.sys.title}</Link>
         <Link href={`/${lang}/panel/perfil`} className="side-link">👤 {t.nav.profile}</Link>
         {role === "admin" && <Link href={`/${lang}/panel/usuarios`} className="side-link">⚙️ {t.nav.users}</Link>}
       </div>
