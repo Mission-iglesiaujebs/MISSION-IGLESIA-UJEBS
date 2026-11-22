@@ -24,8 +24,22 @@ Tecnología: **Next.js 14 + Supabase + Vercel**. Acceso con correo y contraseña
 
 Todos los registros se pueden crear, editar y eliminar según el rol.
 
+## 🎓 Aula virtual
+- Cursos con inscripción en línea, lecciones con video de YouTube y material, y barra de progreso.
+- Tareas que el alumno entrega y el maestro califica con comentario.
+- Exámenes de opción múltiple corregidos en el servidor (el alumno nunca ve las respuestas).
+- Clase en vivo: enlace propio (Zoom/Meet) o sala Jitsi gratuita automática.
+- Certificado imprimible al completar todas las lecciones.
+- Los maestros (líder, secretaría, pastor, admin) administran cursos, lecciones, tareas, preguntas y entregas desde el panel.
+
+## 🧩 200 sistemas
+- 20 áreas × 10 sistemas (`lib/catalog.ts`), en 5 idiomas, guardados en la tabla genérica `records`.
+- Permisos por área definidos en la base (`area_access`) y aplicados con RLS.
+- Cada sistema tiene buscador, alta/edición/borrado, sede y exportación CSV.
+- Agregar un sistema = una línea en `lib/catalog.ts` (y su área en `area_access` si es nueva).
+
 ## Puesta en marcha
-1. **Supabase** → proyecto nuevo → *SQL Editor* → pega `supabase/migrations/0001_iglesia.sql` → **Run**.
+1. **Supabase** → proyecto nuevo → *SQL Editor* → ejecuta en orden `0001`, `0002` y `0003` de `supabase/migrations/`.
 2. *Authentication → Providers → Email*: activo. (Opcional: desactiva "Confirm email".)
 3. **Vercel** → *Add New Project* → importa este repositorio → variables de `.env.example`
    (Supabase → *Project Settings → API*) → **Deploy**.

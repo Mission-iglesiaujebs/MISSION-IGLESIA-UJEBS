@@ -1,20 +1,20 @@
 import type { Dict } from "./es";
 export const ht: Dict = {
-  nav: { home: "Akèy", panel: "Tablo", login: "Konekte", logout: "Dekonekte", users: "Itilizatè ak wòl" },
-  common: {
+  nav: { profile: "Pwofil mwen", dashboard: "Akèy tablo a", menu: "Meni", home: "Akèy", panel: "Tablo", login: "Konekte", logout: "Dekonekte", users: "Itilizatè ak wòl" },
+  common: { searchPh: "Chèche…", export: "Ekspòte CSV", of: "sou", viewAll: "Wè tout",
     save: "Anrejistre", delete: "Efase", add: "Ajoute", yes: "Wi", no: "Non", empty: "Poko gen anyen.",
     noAccess: "Ou pa gen dwa wè seksyon sa a.", actions: "Aksyon", select: "— Chwazi —",
     language: "Lang", total: "Total", back: "Retounen", newRecord: "Nouvo anrejistreman", edit: "Modifye", saved: "Anrejistre avèk siksè.", saveError: "Pa t kapab anrejistre. Verifye done yo oswa dwa ou.", all: "Tout", search: "Filtre",
     records: "anrejistreman",
   },
-  home: {
+  home: { liveNow: "AN DIRÈK", nextStream: "Pwochen emisyon", watchLive: "Gade emisyon an", about: "Yon legliz ki gen kongregasyon nan plizyè peyi, ini nan lafwa ak sèvis.", links: "Lyen", follow: "Swiv nou", members: "Espas manm yo",
     welcome: "Byenvini nan", subtitle: "Yon fanmi k ap adore Bondye epi sèvi kominote li.",
     schedule: "Lè kilt yo", upcomingEvents: "Pwochen aktivite", latestSermons: "Dènye predikasyon",
     announcements: "Anons", prayerCta: "Ou bezwen lapriyè? Konekte epi voye demann ou.",
     contact: "Kontak", joinUs: "Vin jwenn kominote a", watch: "Gade",
   },
   days: { sunday: "Dimanch", monday: "Lendi", tuesday: "Madi", wednesday: "Mèkredi", thursday: "Jedi", friday: "Vandredi", saturday: "Samdi" },
-  auth: {
+  auth: { forgot: "Ou bliye modpas ou?", forgotTitle: "Rekipere modpas", sendLink: "Voye lyen an", linkSent: "Si imèl la egziste, nou voye yon lyen pou kreye yon nouvo modpas.", backToLogin: "Retounen pou konekte",
     title: "Espas manm yo", email: "Imèl", password: "Modpas", fullName: "Non konplè",
     signIn: "Konekte", signUp: "Kreye kont", noAccount: "Ou pa gen kont?", haveAccount: "Ou gen kont deja?",
     checkEmail: "Kont lan kreye. Gade imèl ou si yo mande konfimasyon, epi konekte.", error: "Imèl oswa modpas pa bon.",
@@ -23,7 +23,17 @@ export const ht: Dict = {
   roles: { miembro: "Manm", lider: "Lidè", secretaria: "Sekretarya", tesorero: "Trezorye", pastor: "Pastè", admin: "Administratè" },
   users: { title: "Itilizatè ak wòl", changeRole: "Chanje wòl", site: "Legliz lokal", onlyAdmin: "Se administratè a sèlman ki ka chanje wòl." },
   sites: { allSites: "Tout legliz la", filter: "Legliz lokal:", directory: "Anyè kongregasyon yo", directoryDesc: "Jwenn yon legliz lokal epi gade lè kilt li yo.", searchLabel: "Chèche pa legliz, peyi oswa vil", searchBtn: "Chèche", seeAll: "Wè tout", noResults: "Pa jwenn okenn legliz pou rechèch sa a.", noSites: "Poko gen legliz lokal pibliye.", general: "Jeneral (tout legliz lokal yo)", scheduleTbc: "Lè a poko konfime" },
+  groups: { congregation: "Kongregasyon", formation: "Fòmasyon", worship: "Kilt ak medya", finance: "Finans", communication: "Kominikasyon", administration: "Administrasyon" },
+  dash: { activeMembers: "Manm aktif", visitorsMonth: "Vizitè mwa sa a", lastAttendance: "Dènye prezans", incomeMonth: "Antre mwa a", expensesMonth: "Depans mwa a", balance: "Balans mwa a", birthdays: "Anivèsè mwa a", noBirthdays: "Pa gen anivèsè mwa sa a.", upcoming: "Pwochen aktivite", pendingPrayers: "Demann ki ap tann", attendanceTrend: "Prezans (dènye reyinyon)", recentVisitors: "Dènye vizitè", quick: "Aksè rapid", people: "moun", noData: "Poko gen done." },
+  profile: { title: "Pwofil mwen", name: "Non", saveName: "Anrejistre non an", newPassword: "Nouvo modpas", confirmPassword: "Repete modpas la", changePassword: "Chanje modpas", passwordChanged: "Modpas la chanje.", passwordMismatch: "Modpas yo pa menm oswa yo gen mwens pase 8 karaktè.", nameSaved: "Non an anrejistre.", account: "Kont", security: "Sekirite" },
   modules: {
+    visitors: { title: "Vizitè", desc: "Swivi nouvo moun ki vini", fields: { site_id: "Legliz lokal", full_name: "Non konplè", phone: "Telefòn", email: "Imèl", visit_date: "Dat vizit", invited_by: "Envite pa", status: "Estati", notes: "Nòt" } },
+    courses: { title: "Lekòl biblik", desc: "Kou ak disipla", fields: { site_id: "Legliz lokal", title: "Kou", teacher: "Pwofesè", schedule: "Lè", starts_on: "Kòmansman", is_open: "Enskripsyon louvri", description: "Deskripsyon" } },
+    enrollments: { title: "Enskripsyon", desc: "Elèv pa kou", fields: { site_id: "Legliz lokal", course_id: "Kou", member_id: "Elèv", status: "Estati", grade: "Nòt" } },
+    livestreams: { title: "Emisyon an dirèk", desc: "Kilt an dirèk sou YouTube", fields: { site_id: "Legliz lokal", title: "Tit", youtube_url: "Lyen YouTube", starts_at: "Dat ak lè", is_live: "An dirèk kounye a" } },
+    service_roster: { title: "Tou sèvis", desc: "Volontè pa dat", fields: { site_id: "Legliz lokal", date: "Dat", task: "Travay", ministry_id: "Ministè", member_id: "Volontè", notes: "Nòt" } },
+    expenses: { title: "Depans", desc: "Sòti lajan legliz la", fields: { site_id: "Legliz lokal", date: "Dat", category: "Kategori", amount: "Montan", currency: "Lajan", description: "Deskripsyon" } },
+    inventory: { title: "Envantè", desc: "Ekipman ak byen", fields: { site_id: "Legliz lokal", item: "Atik", category: "Kategori", quantity: "Kantite", location: "Kote", condition: "Eta", notes: "Nòt" } },
     sites: { title: "Legliz lokal", desc: "Kongregasyon nan chak vil ak peyi", fields: { name: "Non legliz la", country: "Peyi", city: "Vil", address: "Adrès", schedule: "Lè kilt", pastor_name: "Pastè", phone: "Telefòn", published: "Pibliye nan anyè a" } },
     members: { title: "Manm", desc: "Rejis kongregasyon an", fields: { site_id: "Legliz lokal", full_name: "Non konplè", email: "Imèl", phone: "Telefòn", birth_date: "Dat nesans", address: "Adrès", country: "Peyi", baptized: "Batize", status: "Estati", cell_id: "Selil", ministry_id: "Ministè" } },
     cells: { title: "Selil", desc: "Gwoup lakay", fields: { site_id: "Legliz lokal", name: "Non", leader_name: "Lidè", meeting_day: "Jou reyinyon", address: "Adrès" } },
@@ -36,6 +46,7 @@ export const ht: Dict = {
     prayer_requests: { title: "Demann lapriyè", desc: "Ann priye youn pou lòt", fields: { site_id: "Legliz lokal", name: "Non", request: "Demann", is_public: "Pataje ak legliz la", status: "Estati" } },
   },
   options: {
+    new: "Nouvo", contacted: "Kontakte", returning: "Tounen", member: "Deja manm", enrolled: "Enskri", completed: "Reyisi", dropped: "Abandone", good: "Bon", fair: "Mwayen", poor: "Move", rent: "Lwaye", utilities: "Sèvis", salaries: "Salè", events: "Aktivite", maintenance: "Antretyen", supplies: "Materyèl",
     active: "Aktif", visitor: "Vizitè", inactive: "Inaktif",
     tithe: "Ladim", offering: "Ofrann", missions: "Misyon", building: "Konstriksyon", other: "Lòt",
     cash: "Kach", transfer: "Transfè", card: "Kat",

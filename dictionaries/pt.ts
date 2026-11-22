@@ -1,20 +1,20 @@
 import type { Dict } from "./es";
 export const pt: Dict = {
-  nav: { home: "Início", panel: "Painel", login: "Entrar", logout: "Sair", users: "Usuários e funções" },
-  common: {
+  nav: { profile: "Meu perfil", dashboard: "Início do painel", menu: "Menu", home: "Início", panel: "Painel", login: "Entrar", logout: "Sair", users: "Usuários e funções" },
+  common: { searchPh: "Buscar…", export: "Exportar CSV", of: "de", viewAll: "Ver tudo",
     save: "Salvar", delete: "Excluir", add: "Adicionar", yes: "Sim", no: "Não", empty: "Ainda não há registros.",
     noAccess: "Você não tem permissão para ver esta seção.", actions: "Ações", select: "— Selecionar —",
     language: "Idioma", total: "Total", back: "Voltar", newRecord: "Novo registro", edit: "Editar", saved: "Salvo com sucesso.", saveError: "Não foi possível salvar. Verifique os dados ou suas permissões.", all: "Todas", search: "Filtrar",
     records: "registros",
   },
-  home: {
+  home: { liveNow: "AO VIVO", nextStream: "Próxima transmissão", watchLive: "Assistir transmissão", about: "Uma igreja com sedes em vários países, unida na fé e no serviço.", links: "Links", follow: "Siga-nos", members: "Área de membros",
     welcome: "Bem-vindos à", subtitle: "Uma família que adora a Deus e serve sua comunidade.",
     schedule: "Horários de culto", upcomingEvents: "Próximos eventos", latestSermons: "Últimas pregações",
     announcements: "Avisos", prayerCta: "Precisa de oração? Entre e envie seu pedido.",
     contact: "Contato", joinUs: "Junte-se à comunidade", watch: "Assistir",
   },
   days: { sunday: "Domingo", monday: "Segunda", tuesday: "Terça", wednesday: "Quarta", thursday: "Quinta", friday: "Sexta", saturday: "Sábado" },
-  auth: {
+  auth: { forgot: "Esqueceu sua senha?", forgotTitle: "Recuperar senha", sendLink: "Enviar link", linkSent: "Se o e-mail existir, enviamos um link para criar uma nova senha.", backToLogin: "Voltar para entrar",
     title: "Área de membros", email: "E-mail", password: "Senha", fullName: "Nome completo",
     signIn: "Entrar", signUp: "Criar conta", noAccount: "Não tem conta?", haveAccount: "Já tem conta?",
     checkEmail: "Conta criada. Verifique seu e-mail se for pedida confirmação e depois entre.", error: "E-mail ou senha incorretos.",
@@ -23,7 +23,17 @@ export const pt: Dict = {
   roles: { miembro: "Membro", lider: "Líder", secretaria: "Secretaria", tesorero: "Tesouraria", pastor: "Pastor", admin: "Administrador" },
   users: { title: "Usuários e funções", changeRole: "Mudar função", site: "Sede", onlyAdmin: "Só o administrador pode mudar funções." },
   sites: { allSites: "Toda a igreja", filter: "Sede:", directory: "Diretório de congregações", directoryDesc: "Encontre uma sede e veja seus horários de culto.", searchLabel: "Buscar por sede, país ou cidade", searchBtn: "Buscar", seeAll: "Ver todas", noResults: "Nenhuma sede encontrada para esta busca.", noSites: "Ainda não há sedes publicadas.", general: "Geral (todas as sedes)", scheduleTbc: "Horário a confirmar" },
+  groups: { congregation: "Congregação", formation: "Formação", worship: "Culto e mídia", finance: "Finanças", communication: "Comunicação", administration: "Administração" },
+  dash: { activeMembers: "Membros ativos", visitorsMonth: "Visitantes este mês", lastAttendance: "Última frequência", incomeMonth: "Receitas do mês", expensesMonth: "Despesas do mês", balance: "Saldo do mês", birthdays: "Aniversários do mês", noBirthdays: "Nenhum aniversário este mês.", upcoming: "Próximos eventos", pendingPrayers: "Pedidos pendentes", attendanceTrend: "Frequência (últimas reuniões)", recentVisitors: "Visitantes recentes", quick: "Acessos rápidos", people: "pessoas", noData: "Ainda sem dados." },
+  profile: { title: "Meu perfil", name: "Nome", saveName: "Salvar nome", newPassword: "Nova senha", confirmPassword: "Repita a senha", changePassword: "Mudar senha", passwordChanged: "Senha atualizada.", passwordMismatch: "As senhas não coincidem ou têm menos de 8 caracteres.", nameSaved: "Nome salvo.", account: "Conta", security: "Segurança" },
   modules: {
+    visitors: { title: "Visitantes", desc: "Acompanhamento de novos frequentadores", fields: { site_id: "Sede", full_name: "Nome completo", phone: "Telefone", email: "E-mail", visit_date: "Data da visita", invited_by: "Convidado por", status: "Situação", notes: "Notas" } },
+    courses: { title: "Escola bíblica", desc: "Cursos e discipulado", fields: { site_id: "Sede", title: "Curso", teacher: "Professor", schedule: "Horário", starts_on: "Início", is_open: "Inscrições abertas", description: "Descrição" } },
+    enrollments: { title: "Inscrições", desc: "Alunos por curso", fields: { site_id: "Sede", course_id: "Curso", member_id: "Aluno", status: "Situação", grade: "Nota" } },
+    livestreams: { title: "Transmissões", desc: "Cultos ao vivo no YouTube", fields: { site_id: "Sede", title: "Título", youtube_url: "Link do YouTube", starts_at: "Data e hora", is_live: "Ao vivo agora" } },
+    service_roster: { title: "Escalas de serviço", desc: "Voluntários por data", fields: { site_id: "Sede", date: "Data", task: "Tarefa", ministry_id: "Ministério", member_id: "Voluntário", notes: "Notas" } },
+    expenses: { title: "Despesas", desc: "Saídas da igreja", fields: { site_id: "Sede", date: "Data", category: "Categoria", amount: "Valor", currency: "Moeda", description: "Descrição" } },
+    inventory: { title: "Inventário", desc: "Equipamentos e bens", fields: { site_id: "Sede", item: "Item", category: "Categoria", quantity: "Quantidade", location: "Local", condition: "Estado", notes: "Notas" } },
     sites: { title: "Sedes", desc: "Congregações em cada cidade e país", fields: { name: "Nome da sede", country: "País", city: "Cidade", address: "Endereço", schedule: "Horário de culto", pastor_name: "Pastor", phone: "Telefone", published: "Publicada no diretório" } },
     members: { title: "Membros", desc: "Cadastro da congregação", fields: { site_id: "Sede", full_name: "Nome completo", email: "E-mail", phone: "Telefone", birth_date: "Data de nascimento", address: "Endereço", country: "País", baptized: "Batizado", status: "Situação", cell_id: "Célula", ministry_id: "Ministério" } },
     cells: { title: "Células", desc: "Grupos nas casas", fields: { site_id: "Sede", name: "Nome", leader_name: "Líder", meeting_day: "Dia de reunião", address: "Endereço" } },
@@ -36,6 +46,7 @@ export const pt: Dict = {
     prayer_requests: { title: "Pedidos de oração", desc: "Orem uns pelos outros", fields: { site_id: "Sede", name: "Nome", request: "Pedido", is_public: "Compartilhar com a igreja", status: "Situação" } },
   },
   options: {
+    new: "Novo", contacted: "Contatado", returning: "Voltou", member: "Já é membro", enrolled: "Inscrito", completed: "Aprovado", dropped: "Desistiu", good: "Bom", fair: "Regular", poor: "Ruim", rent: "Aluguel", utilities: "Contas", salaries: "Salários", events: "Eventos", maintenance: "Manutenção", supplies: "Materiais",
     active: "Ativo", visitor: "Visitante", inactive: "Inativo",
     tithe: "Dízimo", offering: "Oferta", missions: "Missões", building: "Construção", other: "Outro",
     cash: "Dinheiro", transfer: "Transferência", card: "Cartão",

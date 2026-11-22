@@ -1,20 +1,20 @@
 import type { Dict } from "./es";
 export const en: Dict = {
-  nav: { home: "Home", panel: "Dashboard", login: "Sign in", logout: "Sign out", users: "Users & roles" },
-  common: {
+  nav: { profile: "My profile", dashboard: "Dashboard home", menu: "Menu", home: "Home", panel: "Dashboard", login: "Sign in", logout: "Sign out", users: "Users & roles" },
+  common: { searchPh: "Search…", export: "Export CSV", of: "of", viewAll: "View all",
     save: "Save", delete: "Delete", add: "Add", yes: "Yes", no: "No", empty: "No records yet.",
     noAccess: "You don't have access to this section.", actions: "Actions", select: "— Select —",
     language: "Language", total: "Total", back: "Back", newRecord: "New record", edit: "Edit", saved: "Saved successfully.", saveError: "Could not save. Check the data or your permissions.", all: "All", search: "Filter",
     records: "records",
   },
-  home: {
+  home: { liveNow: "LIVE", nextStream: "Next stream", watchLive: "Watch stream", about: "A church with branches in several countries, united in faith and service.", links: "Links", follow: "Follow us", members: "Members area",
     welcome: "Welcome to", subtitle: "A family that worships God and serves its community.",
     schedule: "Service times", upcomingEvents: "Upcoming events", latestSermons: "Latest sermons",
     announcements: "Announcements", prayerCta: "Need prayer? Sign in and send your request.",
     contact: "Contact", joinUs: "Join the community", watch: "Watch",
   },
   days: { sunday: "Sunday", monday: "Monday", tuesday: "Tuesday", wednesday: "Wednesday", thursday: "Thursday", friday: "Friday", saturday: "Saturday" },
-  auth: {
+  auth: { forgot: "Forgot your password?", forgotTitle: "Recover password", sendLink: "Send link", linkSent: "If the email exists, we sent a link to create a new password.", backToLogin: "Back to sign in",
     title: "Members area", email: "Email", password: "Password", fullName: "Full name",
     signIn: "Sign in", signUp: "Create account", noAccount: "No account?", haveAccount: "Already have an account?",
     checkEmail: "Account created. Check your email if confirmation is required, then sign in.", error: "Wrong email or password.",
@@ -23,7 +23,17 @@ export const en: Dict = {
   roles: { miembro: "Member", lider: "Leader", secretaria: "Secretary", tesorero: "Treasurer", pastor: "Pastor", admin: "Administrator" },
   users: { title: "Users & roles", changeRole: "Change role", site: "Branch", onlyAdmin: "Only the administrator can change roles." },
   sites: { allSites: "Whole church", filter: "Branch:", directory: "Congregation directory", directoryDesc: "Find a branch and check its service times.", searchLabel: "Search by branch, country or city", searchBtn: "Search", seeAll: "See all", noResults: "No branches found for this search.", noSites: "No branches published yet.", general: "General (all branches)", scheduleTbc: "Schedule to be confirmed" },
+  groups: { congregation: "Congregation", formation: "Discipleship", worship: "Worship & media", finance: "Finance", communication: "Communication", administration: "Administration" },
+  dash: { activeMembers: "Active members", visitorsMonth: "Visitors this month", lastAttendance: "Last attendance", incomeMonth: "Income this month", expensesMonth: "Expenses this month", balance: "Monthly balance", birthdays: "Birthdays this month", noBirthdays: "No birthdays this month.", upcoming: "Upcoming events", pendingPrayers: "Pending prayer requests", attendanceTrend: "Attendance (recent meetings)", recentVisitors: "Recent visitors", quick: "Quick actions", people: "people", noData: "No data yet." },
+  profile: { title: "My profile", name: "Name", saveName: "Save name", newPassword: "New password", confirmPassword: "Repeat password", changePassword: "Change password", passwordChanged: "Password updated.", passwordMismatch: "Passwords don't match or are shorter than 8 characters.", nameSaved: "Name saved.", account: "Account", security: "Security" },
   modules: {
+    visitors: { title: "Visitors", desc: "Follow-up of newcomers", fields: { site_id: "Branch", full_name: "Full name", phone: "Phone", email: "Email", visit_date: "Visit date", invited_by: "Invited by", status: "Status", notes: "Notes" } },
+    courses: { title: "Bible school", desc: "Courses and discipleship", fields: { site_id: "Branch", title: "Course", teacher: "Teacher", schedule: "Schedule", starts_on: "Start date", is_open: "Enrollment open", description: "Description" } },
+    enrollments: { title: "Enrollments", desc: "Students per course", fields: { site_id: "Branch", course_id: "Course", member_id: "Student", status: "Status", grade: "Grade" } },
+    livestreams: { title: "Live streams", desc: "Services live on YouTube", fields: { site_id: "Branch", title: "Title", youtube_url: "YouTube link", starts_at: "Date & time", is_live: "Live now" } },
+    service_roster: { title: "Service roster", desc: "Volunteers by date", fields: { site_id: "Branch", date: "Date", task: "Task", ministry_id: "Ministry", member_id: "Volunteer", notes: "Notes" } },
+    expenses: { title: "Expenses", desc: "Church spending", fields: { site_id: "Branch", date: "Date", category: "Category", amount: "Amount", currency: "Currency", description: "Description" } },
+    inventory: { title: "Inventory", desc: "Equipment and assets", fields: { site_id: "Branch", item: "Item", category: "Category", quantity: "Quantity", location: "Location", condition: "Condition", notes: "Notes" } },
     sites: { title: "Branches", desc: "Congregations in each city and country", fields: { name: "Branch name", country: "Country", city: "City", address: "Address", schedule: "Service times", pastor_name: "Pastor", phone: "Phone", published: "Listed in directory" } },
     members: { title: "Members", desc: "Congregation registry", fields: { site_id: "Branch", full_name: "Full name", email: "Email", phone: "Phone", birth_date: "Birth date", address: "Address", country: "Country", baptized: "Baptized", status: "Status", cell_id: "Cell group", ministry_id: "Ministry" } },
     cells: { title: "Cell groups", desc: "Home groups", fields: { site_id: "Branch", name: "Name", leader_name: "Leader", meeting_day: "Meeting day", address: "Address" } },
@@ -36,6 +46,7 @@ export const en: Dict = {
     prayer_requests: { title: "Prayer requests", desc: "Pray for one another", fields: { site_id: "Branch", name: "Name", request: "Request", is_public: "Share with the church", status: "Status" } },
   },
   options: {
+    new: "New", contacted: "Contacted", returning: "Returning", member: "Now a member", enrolled: "Enrolled", completed: "Completed", dropped: "Dropped", good: "Good", fair: "Fair", poor: "Poor", rent: "Rent", utilities: "Utilities", salaries: "Salaries", events: "Events", maintenance: "Maintenance", supplies: "Supplies",
     active: "Active", visitor: "Visitor", inactive: "Inactive",
     tithe: "Tithe", offering: "Offering", missions: "Missions", building: "Building fund", other: "Other",
     cash: "Cash", transfer: "Bank transfer", card: "Card",

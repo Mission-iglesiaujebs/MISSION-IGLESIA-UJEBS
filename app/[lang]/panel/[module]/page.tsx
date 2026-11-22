@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getDict } from "@/lib/i18n";
 import { getSessionProfile } from "@/lib/supabase/server";
-import { getModule, canCreate, canWrite, type Field } from "@/lib/modules";
+import { getModule, canCreate, canWrite, canSee, type Field } from "@/lib/modules";
 import { loadRefOptions } from "@/lib/refs";
 import { RecordForm } from "@/components/RecordForm";
 import { createRecord, deleteRecord } from "@/app/actions";
@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 type Row = Record<string, unknown> & { id: string };
 
-export default async function ModulePage({ params, searchParams }: { params: { lang: string; module: string }; searchParams: { ok?: string; error?: string; sede?: string } }) {
+export default async function ModulePage({ params, searchParams }: { params: { lang: string; module: string }; searchParams: { ok?: string; error?: string; sede?: string; q?: string; nuevo?: string } }) {
   const mod = getModule(params.module);
   if (!mod) notFound();
   const t = getDict(params.lang);
@@ -20,6 +20,8 @@ export default async function ModulePage({ params, searchParams }: { params: { l
   if (!user) redirect(`/${lang}/login`);
 
   const role = profile?.role ?? null;
+  if (!canSee(mod, role)) return <p className="card">{t.common.noAccess}</p>;
+  const q = (searchParams.q ?? "").trim().slice(0, 100);
   const general = !profile?.site_id;
   const mt = t.modules[mod.key as keyof typeof t.modules];
   const label = (k: string) => (mt.fields as Record<string, string>)[k] ?? k;
@@ -28,6 +30,7 @@ export default async function ModulePage({ params, searchParams }: { params: { l
   const hasSite = mod.fields.some((f) => f.key === "site_id");
   let query = supabase.from(mod.table).select("*").order(mod.order.column, { ascending: mod.order.ascending }).limit(500);
   if (hasSite && general && searchParams.sede) query = query.eq("site_id", searchParams.sede);
+  if (q) query = query.ilike(mod.search, `%${q.replace(/[%_]/g, "")}%`);
   const { data, error } = await query;
   const rows = (data as Row[]) ?? [];
 
@@ -48,7 +51,7 @@ export default async function ModulePage({ params, searchParams }: { params: { l
     return s.length > 80 ? s.slice(0, 80) + "…" : s;
   };
 
-  const totals = mod.key === "donations"
+  const totals = ["donations", "expenses"].includes(mod.key)
     ? Object.entries(rows.reduce<Record<string, number>>((acc, r) => {
         const c = String(r.currency ?? "");
         acc[c] = (acc[c] ?? 0) + Number(r.amount ?? 0);
@@ -58,28 +61,30 @@ export default async function ModulePage({ params, searchParams }: { params: { l
 
   return (
     <div className="space-y-6">
-      <div>
-        <Link href={`/${lang}/panel`} className="text-sm text-brand">← {t.common.back}</Link>
-        <h1 className="mt-1 text-2xl font-bold">{mod.icon} {mt.title}</h1>
-        <p className="text-sm text-slate-500">{mt.desc}{profile?.sites?.name && <> · ⛪ {profile.sites.name}</>}</p>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold">{mod.icon} {mt.title}</h1>
+          <p className="text-sm text-slate-500">{mt.desc}{profile?.sites?.name && <> · ⛪ {profile.sites.name}</>} · {rows.length} {t.common.records}</p>
+        </div>
+        <a href={`/${lang}/panel/${mod.key}/export${searchParams.sede ? `?sede=${encodeURIComponent(searchParams.sede)}` : ""}`} className="btn-ghost ring-1 ring-slate-200">⬇ {t.common.export}</a>
       </div>
 
       {searchParams.ok && <p className="rounded-lg bg-green-50 p-3 text-sm text-green-700">✓ {t.common.saved}</p>}
       {(error || searchParams.error) && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error ? t.common.noAccess : t.common.saveError}</p>}
 
-      {hasSite && general && (refOptions.site_id?.length ?? 0) > 0 && (
-        <form className="flex flex-wrap items-center gap-2 text-sm">
-          <label>⛪ {t.sites.filter}</label>
-          <select name="sede" defaultValue={searchParams.sede ?? ""} className="input w-auto">
-            <option value="">{t.common.all}</option>
+      <form className="flex flex-wrap items-center gap-2 text-sm">
+        <input name="q" defaultValue={q} placeholder={t.common.searchPh} maxLength={100} className="input w-64" />
+        {hasSite && general && (refOptions.site_id?.length ?? 0) > 0 && (
+          <select name="sede" defaultValue={searchParams.sede ?? ""} className="input w-auto" aria-label={t.sites.filter}>
+            <option value="">⛪ {t.common.all}</option>
             {refOptions.site_id.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
           </select>
-          <button className="btn-ghost">{t.common.search}</button>
-        </form>
-      )}
+        )}
+        <button className="btn">{t.common.search}</button>
+      </form>
 
       {creator && (
-        <details className="card" open={rows.length === 0}>
+        <details id="nuevo" className="card" open={rows.length === 0 || !!searchParams.nuevo}>
           <summary className="cursor-pointer font-semibold">➕ {t.common.newRecord}</summary>
           <div className="mt-4">
             <RecordForm mod={mod} t={t} refOptions={refOptions} action={createRecord.bind(null, lang, mod.key)} writer={writer} hideSite={!general} />
