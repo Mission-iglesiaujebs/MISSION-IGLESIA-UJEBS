@@ -1,20 +1,20 @@
 import type { Dict } from "./es";
 export const fr: Dict = {
-  nav: { home: "Accueil", panel: "Tableau de bord", login: "Connexion", logout: "Déconnexion", users: "Utilisateurs et rôles" },
-  common: {
+  nav: { profile: "Mon profil", dashboard: "Accueil du tableau", menu: "Menu", home: "Accueil", panel: "Tableau de bord", login: "Connexion", logout: "Déconnexion", users: "Utilisateurs et rôles" },
+  common: { searchPh: "Rechercher…", export: "Exporter CSV", of: "de", viewAll: "Tout voir",
     save: "Enregistrer", delete: "Supprimer", add: "Ajouter", yes: "Oui", no: "Non", empty: "Aucun enregistrement pour le moment.",
     noAccess: "Vous n'avez pas accès à cette section.", actions: "Actions", select: "— Choisir —",
     language: "Langue", total: "Total", back: "Retour", newRecord: "Nouvel enregistrement", edit: "Modifier", saved: "Enregistré avec succès.", saveError: "Impossible d'enregistrer. Vérifiez les données ou vos droits.", all: "Toutes", search: "Filtrer",
     records: "enregistrements",
   },
-  home: {
+  home: { liveNow: "EN DIRECT", nextStream: "Prochaine diffusion", watchLive: "Voir la diffusion", about: "Une église présente dans plusieurs pays, unie dans la foi et le service.", links: "Liens", follow: "Suivez-nous", members: "Espace membres",
     welcome: "Bienvenue à", subtitle: "Une famille qui adore Dieu et sert sa communauté.",
     schedule: "Horaires des cultes", upcomingEvents: "Événements à venir", latestSermons: "Dernières prédications",
     announcements: "Annonces", prayerCta: "Besoin de prière ? Connectez-vous et envoyez votre demande.",
     contact: "Contact", joinUs: "Rejoignez la communauté", watch: "Voir",
   },
   days: { sunday: "Dimanche", monday: "Lundi", tuesday: "Mardi", wednesday: "Mercredi", thursday: "Jeudi", friday: "Vendredi", saturday: "Samedi" },
-  auth: {
+  auth: { forgot: "Mot de passe oublié ?", forgotTitle: "Récupérer le mot de passe", sendLink: "Envoyer le lien", linkSent: "Si le courriel existe, nous avons envoyé un lien pour créer un nouveau mot de passe.", backToLogin: "Retour à la connexion",
     title: "Espace membres", email: "Courriel", password: "Mot de passe", fullName: "Nom complet",
     signIn: "Se connecter", signUp: "Créer un compte", noAccount: "Pas de compte ?", haveAccount: "Déjà un compte ?",
     checkEmail: "Compte créé. Vérifiez votre courriel si une confirmation est demandée, puis connectez-vous.", error: "Courriel ou mot de passe incorrect.",
@@ -23,7 +23,17 @@ export const fr: Dict = {
   roles: { miembro: "Membre", lider: "Leader", secretaria: "Secrétariat", tesorero: "Trésorerie", pastor: "Pasteur", admin: "Administrateur" },
   users: { title: "Utilisateurs et rôles", changeRole: "Changer le rôle", site: "Assemblée", onlyAdmin: "Seul l'administrateur peut changer les rôles." },
   sites: { allSites: "Toute l'église", filter: "Assemblée :", directory: "Annuaire des assemblées", directoryDesc: "Trouvez une assemblée et consultez ses horaires de culte.", searchLabel: "Rechercher par assemblée, pays ou ville", searchBtn: "Rechercher", seeAll: "Tout voir", noResults: "Aucune assemblée trouvée pour cette recherche.", noSites: "Aucune assemblée publiée pour le moment.", general: "Générale (toutes les assemblées)", scheduleTbc: "Horaire à confirmer" },
+  groups: { congregation: "Assemblée", formation: "Formation", worship: "Culte et médias", finance: "Finances", communication: "Communication", administration: "Administration" },
+  dash: { activeMembers: "Membres actifs", visitorsMonth: "Visiteurs ce mois", lastAttendance: "Dernière présence", incomeMonth: "Revenus du mois", expensesMonth: "Dépenses du mois", balance: "Solde du mois", birthdays: "Anniversaires du mois", noBirthdays: "Aucun anniversaire ce mois.", upcoming: "Événements à venir", pendingPrayers: "Demandes en attente", attendanceTrend: "Présence (dernières réunions)", recentVisitors: "Visiteurs récents", quick: "Accès rapides", people: "personnes", noData: "Pas encore de données." },
+  profile: { title: "Mon profil", name: "Nom", saveName: "Enregistrer le nom", newPassword: "Nouveau mot de passe", confirmPassword: "Répétez le mot de passe", changePassword: "Changer le mot de passe", passwordChanged: "Mot de passe mis à jour.", passwordMismatch: "Les mots de passe ne correspondent pas ou ont moins de 8 caractères.", nameSaved: "Nom enregistré.", account: "Compte", security: "Sécurité" },
   modules: {
+    visitors: { title: "Visiteurs", desc: "Suivi des nouveaux venus", fields: { site_id: "Assemblée", full_name: "Nom complet", phone: "Téléphone", email: "Courriel", visit_date: "Date de visite", invited_by: "Invité par", status: "Statut", notes: "Notes" } },
+    courses: { title: "École biblique", desc: "Cours et discipulat", fields: { site_id: "Assemblée", title: "Cours", teacher: "Enseignant", schedule: "Horaire", starts_on: "Début", is_open: "Inscriptions ouvertes", description: "Description" } },
+    enrollments: { title: "Inscriptions", desc: "Élèves par cours", fields: { site_id: "Assemblée", course_id: "Cours", member_id: "Élève", status: "Statut", grade: "Note" } },
+    livestreams: { title: "Diffusions", desc: "Cultes en direct sur YouTube", fields: { site_id: "Assemblée", title: "Titre", youtube_url: "Lien YouTube", starts_at: "Date et heure", is_live: "En direct maintenant" } },
+    service_roster: { title: "Tours de service", desc: "Bénévoles par date", fields: { site_id: "Assemblée", date: "Date", task: "Tâche", ministry_id: "Ministère", member_id: "Bénévole", notes: "Notes" } },
+    expenses: { title: "Dépenses", desc: "Sorties de l'église", fields: { site_id: "Assemblée", date: "Date", category: "Catégorie", amount: "Montant", currency: "Devise", description: "Description" } },
+    inventory: { title: "Inventaire", desc: "Équipements et biens", fields: { site_id: "Assemblée", item: "Article", category: "Catégorie", quantity: "Quantité", location: "Emplacement", condition: "État", notes: "Notes" } },
     sites: { title: "Assemblées", desc: "Congrégations dans chaque ville et pays", fields: { name: "Nom de l'assemblée", country: "Pays", city: "Ville", address: "Adresse", schedule: "Horaire du culte", pastor_name: "Pasteur", phone: "Téléphone", published: "Publiée dans l'annuaire" } },
     members: { title: "Membres", desc: "Registre de l'assemblée", fields: { site_id: "Assemblée", full_name: "Nom complet", email: "Courriel", phone: "Téléphone", birth_date: "Date de naissance", address: "Adresse", country: "Pays", baptized: "Baptisé", status: "Statut", cell_id: "Cellule", ministry_id: "Ministère" } },
     cells: { title: "Cellules", desc: "Groupes de maison", fields: { site_id: "Assemblée", name: "Nom", leader_name: "Responsable", meeting_day: "Jour de réunion", address: "Adresse" } },
@@ -36,6 +46,7 @@ export const fr: Dict = {
     prayer_requests: { title: "Demandes de prière", desc: "Prions les uns pour les autres", fields: { site_id: "Assemblée", name: "Nom", request: "Demande", is_public: "Partager avec l'église", status: "Statut" } },
   },
   options: {
+    new: "Nouveau", contacted: "Contacté", returning: "Revenu", member: "Déjà membre", enrolled: "Inscrit", completed: "Réussi", dropped: "Abandonné", good: "Bon", fair: "Moyen", poor: "Mauvais", rent: "Loyer", utilities: "Services", salaries: "Salaires", events: "Événements", maintenance: "Entretien", supplies: "Fournitures",
     active: "Actif", visitor: "Visiteur", inactive: "Inactif",
     tithe: "Dîme", offering: "Offrande", missions: "Missions", building: "Construction", other: "Autre",
     cash: "Espèces", transfer: "Virement", card: "Carte",

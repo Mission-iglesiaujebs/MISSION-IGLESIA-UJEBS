@@ -21,7 +21,6 @@ export default async function Users({ params }: { params: { lang: string } }) {
 
   return (
     <div className="space-y-4">
-      <Link href={`/${lang}/panel`} className="text-sm text-brand">← {t.common.back}</Link>
       <h1 className="text-2xl font-bold">⚙️ {t.users.title}</h1>
       <div className="card overflow-x-auto p-0">
         <table className="w-full text-left text-sm">
