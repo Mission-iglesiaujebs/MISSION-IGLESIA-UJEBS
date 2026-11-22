@@ -51,7 +51,7 @@ export default async function ModulePage({ params, searchParams }: { params: { l
     return s.length > 80 ? s.slice(0, 80) + "…" : s;
   };
 
-  const totals = mod.key === "donations"
+  const totals = ["donations", "expenses"].includes(mod.key)
     ? Object.entries(rows.reduce<Record<string, number>>((acc, r) => {
         const c = String(r.currency ?? "");
         acc[c] = (acc[c] ?? 0) + Number(r.amount ?? 0);
