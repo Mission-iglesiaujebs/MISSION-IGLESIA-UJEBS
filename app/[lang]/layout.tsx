@@ -4,6 +4,8 @@ import { site, locales, localeNames } from "@/config/site";
 import { getDict, isLocale } from "@/lib/i18n";
 import { getSessionProfile } from "@/lib/supabase/server";
 import { signOut } from "@/app/actions";
+import { InstallApp } from "@/components/InstallApp";
+import { getPwaText } from "@/lib/pwa-i18n";
 
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
@@ -14,6 +16,7 @@ export default async function LangLayout({ children, params }: { children: React
   const t = getDict(params.lang);
   const { user } = await getSessionProfile();
   const lang = params.lang;
+  const pwa = getPwaText(lang);
 
   return (
     <html lang={lang}>
@@ -37,6 +40,7 @@ export default async function LangLayout({ children, params }: { children: React
                 <Link href={`/${lang}/login`} className="rounded-lg bg-brand-gold px-4 py-1.5 font-semibold text-brand">{t.nav.login}</Link>
               )}
             </nav>
+            <InstallApp t={pwa} />
             <details className="relative">
               <summary className="cursor-pointer list-none rounded-lg px-2 py-1.5 text-xs font-semibold uppercase ring-1 ring-white/30 hover:bg-white/10">🌐 {lang}</summary>
               <div className="absolute right-0 mt-2 w-40 overflow-hidden rounded-xl bg-white text-sm text-slate-700 shadow-xl">
@@ -49,7 +53,7 @@ export default async function LangLayout({ children, params }: { children: React
         </header>
         <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8">{children}</main>
         <footer className="bg-slate-900 text-slate-300">
-          <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 text-sm md:grid-cols-3">
+          <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 text-sm md:grid-cols-4">
             <div>
               <p className="flex items-center gap-2 font-bold text-white"><span className="text-brand-gold">✝</span> {site.name}</p>
               <p className="mt-2 text-slate-400">{t.home.about}</p>
@@ -68,6 +72,7 @@ export default async function LangLayout({ children, params }: { children: React
                 {locales.map((l) => <Link key={l} href={`/${l}`} className="uppercase hover:text-white">{l}</Link>)}
               </p>
             </div>
+            <InstallApp t={pwa} variant="card" />
           </div>
           <p className="border-t border-slate-800 py-4 text-center text-xs text-slate-500">© {new Date().getFullYear()} {site.name}</p>
         </footer>
